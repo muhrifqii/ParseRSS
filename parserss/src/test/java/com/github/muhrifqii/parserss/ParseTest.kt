@@ -4,9 +4,6 @@ import com.google.common.truth.Truth.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.runners.MockitoJUnitRunner
 import org.xmlpull.v1.XmlPullParserFactory
 
 private const val xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
@@ -31,19 +28,19 @@ private const val xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
         "    </item>\n" +
         "  </channel>\n" +
         "</rss>"
-@RunWith(MockitoJUnitRunner::class)
 class ParseTest {
-    @Mock lateinit var mockPullParserFactory: XmlPullParserFactory
-    @Rule val exception = ExpectedException.none()
+    @get:Rule val exception = ExpectedException.none()
 
     @Test
-    fun ParseRSS_Valid() {
+    fun ParseRSS_ThrowException() {
         exception.expect(ParseRSSException::class.java)
         exception.expectMessage("xmlPullParserFactory is null. Should call ParseRSS.init() once.")
+        ParseRSS.parse<RSSFeedObject>(xml)
     }
 
     @Test
     fun RSSFeed_ValidFeed() {
+        ParseRSS.init(XmlPullParserFactory.newInstance())
         val feed: RSSFeedObject = ParseRSS.parse(xml)
         assertThat(feed.title).matches("Berita di Portal DP3AP2")
         assertThat(feed.link).matches("https://dp3ap2.jogjaprov.go.id/")

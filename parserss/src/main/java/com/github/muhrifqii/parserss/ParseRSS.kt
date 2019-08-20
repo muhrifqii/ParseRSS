@@ -6,7 +6,6 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
 import java.io.StringReader
 import java.util.*
-import kotlin.NullPointerException
 
 object ParseRSS: ParseRSSPullParser {
     private var factory: XmlPullParserFactory? = null
