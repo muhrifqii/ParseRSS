@@ -43,7 +43,7 @@ object ParseRSS: ParseRSSPullParser {
                         if (isParsingItem)
                             item.description = parser.nextText().trim()
                         else if (isParsingChannel)
-                            feed.title = parser.nextText().trim()
+                            feed.description = parser.nextText().trim()
                     }
                     ParseRSSKeyword.LINK -> {
                         if (isParsingItem)
