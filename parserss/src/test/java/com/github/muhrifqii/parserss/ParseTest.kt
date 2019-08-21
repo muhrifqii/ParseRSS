@@ -1,8 +1,10 @@
 package com.github.muhrifqii.parserss
 
 import com.google.common.truth.Truth.*
+import org.junit.Before
 import org.junit.Test
 import org.xmlpull.v1.XmlPullParserFactory
+import java.io.StringReader
 
 internal const val xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
         "<!-- Generated on Mon, 19 Aug 2019 10:54:07 +0000 -->\n" +
@@ -28,9 +30,20 @@ internal const val xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
         "</rss>"
 
 class ParseTest {
+    @Before
+    fun configure() {
+        ParseRSS.init(XmlPullParserFactory.newInstance())
+    }
+
+    @Test
+    fun RSSFeed_Reader() {
+        val reader = StringReader(xml)
+        val feed: RSSFeedObject = ParseRSS.parse(reader)
+        assertThat(feed.title).matches("Berita di Portal DP3AP2")
+    }
+
     @Test
     fun RSSFeed_ValidFeed() {
-        ParseRSS.init(XmlPullParserFactory.newInstance())
         val feed: RSSFeedObject = ParseRSS.parse(xml)
         assertThat(feed.title).matches("Berita di Portal DP3AP2")
         assertThat(feed.link).matches("https://dp3ap2.jogjaprov.go.id/")
@@ -40,7 +53,6 @@ class ParseTest {
 
     @Test
     fun RSSItem_ValidItem() {
-        ParseRSS.init(XmlPullParserFactory.newInstance())
         val feed: RSSFeedObject = ParseRSS.parse(xml)
         val item1 = feed.items[0]
         assertThat(item1.title).matches("Puncak Peringatan Hari Anak Nasional D.I. Yogyakarta 2018")

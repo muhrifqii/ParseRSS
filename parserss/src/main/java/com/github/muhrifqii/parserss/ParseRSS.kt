@@ -4,6 +4,7 @@ import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
+import java.io.Reader
 import java.io.StringReader
 import java.util.*
 
@@ -16,13 +17,13 @@ object ParseRSS: ParseRSSPullParser {
 
     @Suppress("UNCHECKED_CAST")
     @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
-    override fun <R : RSSFeed> parse(xml: String): R {
+    override fun <R : RSSFeed> parse(xml: Reader): R {
         if (factory == null) throw ParseRSSException("xmlPullParserFactory is null. Should call ParseRSS.init() once.")
         val feed = RSSFeedObject()
         var item = RSSItemObject()
         factory!!.isNamespaceAware = false
         val parser = factory!!.newPullParser()
-        parser.setInput(StringReader(xml))
+        parser.setInput(xml)
         var isParsingChannel = false
         var isParsingItem = false
         // start searching token
@@ -67,5 +68,10 @@ object ParseRSS: ParseRSSPullParser {
             token = parser.next()
         }
         return feed as R
+    }
+
+    @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
+    override fun <R : RSSFeed> parse(xml: String): R {
+        return parse(StringReader(xml))
     }
 }
