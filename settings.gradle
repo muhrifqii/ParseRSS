@@ -1,1 +1,1 @@
-include ':sample', ':parserss'
+include ':sample', ':parserss', ':fuel'
