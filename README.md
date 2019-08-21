@@ -5,6 +5,9 @@
   <a href="https://jitpack.io/#muhrifqii/ParseRSS">
     <img src="https://jitpack.io/v/muhrifqii/ParseRSS.svg" />
   </a>
+  <a href="https://travis-ci.org/muhrifqii/ParseRSS">
+    <img src="https://travis-ci.org/muhrifqii/ParseRSS.svg?branch=master" />
+  </a>
   <a href="https://github.com/muhrifqii/ParseRSS/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-BLUE.svg" />
   </a>  
