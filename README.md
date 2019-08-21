@@ -12,10 +12,11 @@
     <img src="https://img.shields.io/badge/API-14-ORANGE.svg" />
   </a>
 </p>
-<br/>
 <div align="center"><sup>RSS Parser for android<sup></div>
 <br/>
 <br/>
+
+#### Usage
 
 #### Gradle Dependency
 
@@ -30,12 +31,10 @@ allprojects {
 ```
 And then add the dependency
 ```gradle
-    dependencies {
-        implementation "com.github.muhrifqii:ParseRSS:$version"
-    }
+implementation "com.github.muhrifqii:ParseRSS:$version"
 ```
 
 #### TODO
 - [ ] How To
 - [ ] Mapper for Retrofit
-- [ ] Mapper for Fuel
+- [x] Mapper for Fuel
