@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_margin="8dp"
+        android:layout_height="150dp">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+            <ImageView android:layout_width="150dp"
+                       android:layout_height="150dp"
+                       android:src="@drawable/ic_launcher_background"
+                       android:id="@+id/imagePreview"/>
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:layout_margin="8dp"
+                          android:orientation="vertical">
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/titleTV"
+                          android:maxLines="1"
+                          style="@style/TextAppearance.AppCompat.Headline"
+                          tools:text="@tools:sample/cities"/>
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:layout_marginTop="8dp"
+                          android:id="@+id/subtitleTV"
+                          android:ellipsize="end"
+                          android:maxLines="5"
+                          style="@style/TextAppearance.AppCompat.Subhead"
+                          tools:text="Test 1 2 B C D \n j"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
