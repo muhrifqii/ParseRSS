@@ -3,6 +3,7 @@ package com.github.muhrifqii.parserss.fuel
 import com.github.kittinunf.fuel.core.*
 import com.github.muhrifqii.parserss.ParseRSS
 import com.github.muhrifqii.parserss.RSSFeed
+import java.io.Reader
 
 fun Request.responseRss() = response(parseRss())
 
@@ -20,5 +21,9 @@ inline fun <reified T : RSSFeed> parseRss(): ResponseDeserializable<T> =
         override fun deserialize(content: String): T? {
             // TODO: ParseRSS param as Reader
             return ParseRSS.parse(content)
+        }
+
+        override fun deserialize(reader: Reader): T? {
+            return ParseRSS.parse(reader)
         }
     }
