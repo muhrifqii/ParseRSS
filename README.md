@@ -11,8 +11,8 @@
   <a href="https://github.com/muhrifqii/ParseRSS/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-BLUE.svg" />
   </a>  
-  <a href="#">
-    <img src="https://img.shields.io/badge/API-14-ORANGE.svg" />
+  <a href="https://www.codacy.com/app/muhrifqii/ParseRSS?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=muhrifqii/ParseRSS&amp;utm_campaign=Badge_Grade">
+    <img src="https://api.codacy.com/project/badge/Grade/80070eb57e6f456f9e89a4d65da0c7fd"/>
   </a>
 </p>
 <div align="center"><sup>RSS Parser for android<sup></div>
@@ -96,13 +96,13 @@ allprojects {
     }
 }
 ```
-#### Used on Fuel
+### Used on Fuel
 ```gradle
 // ParseRSS as Fuel Converter Factory
 implementation "com.github.muhrifqii.ParseRSS:parserss:$version"
 implementation "com.github.muhrifqii.ParseRSS:fuel:$version"
 ```
-#### Used on Retrofit
+### Used on Retrofit
 ```gradle
 // ParseRSS as Retrofit Converter Factory
 implementation "com.github.muhrifqii.ParseRSS:parserss:$version"
