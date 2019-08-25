@@ -7,6 +7,7 @@ import java.io.Reader
 
 interface ParseRSSPullParser {
     fun init(pullParserFactory: XmlPullParserFactory)
+    var applyRSSFeedConstructor: (() -> RSSFeed)
     @Throws(XmlPullParserException::class, IOException::class)
     fun <R : RSSFeed> parse(xml: Reader): R
     fun <R : RSSFeed> parse(xml: String): R

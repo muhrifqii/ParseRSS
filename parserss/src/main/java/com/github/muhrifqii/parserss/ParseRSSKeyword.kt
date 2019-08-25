@@ -1,6 +1,6 @@
 package com.github.muhrifqii.parserss
 
-object ParseRSSKeyword {
+internal object ParseRSSKeyword {
     const val CHANNEL = "channel"
     const val ITEM = "item"
     const val TITLE = "title"
@@ -11,4 +11,5 @@ object ParseRSSKeyword {
     const val GUID = "guid"
     const val LINK = "link"
     const val URL = "url"
+    const val LANG = "language"
 }

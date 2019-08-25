@@ -19,13 +19,18 @@ object ParseRSS : ParseRSSPullParser {
     }
 
     /**
+     * RSS Feed constructor function for generic RSSFeed object
+     */
+    override var applyRSSFeedConstructor: (() -> RSSFeed) = { RSSFeedObject() }
+
+    /**
      * Parse RSS from Reader Object
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
     override fun <R : RSSFeed> parse(xml: Reader): R {
         if (factory == null) throw ParseRSSException("xmlPullParserFactory is null. Should call ParseRSS.init() once.")
-        val feed = RSSFeedObject()
+        val feed = applyRSSFeedConstructor()
         var item = RSSItemObject()
         var image = RSSImageObject()
         factory!!.isNamespaceAware = false
@@ -78,6 +83,11 @@ object ParseRSS : ParseRSSPullParser {
                             .toBoolean()
                         when {
                             isParsingItem -> item.guId = GUId(parser.nextText().trim(), isPerma)
+                        }
+                    }
+                    ParseRSSKeyword.LANG -> {
+                        when {
+                            isParsingChannel -> feed.language = parser.nextText().trim()
                         }
                     }
                 }

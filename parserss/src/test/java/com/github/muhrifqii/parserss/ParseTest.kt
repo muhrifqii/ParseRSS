@@ -14,6 +14,7 @@ internal const val xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
         "    <title><![CDATA[AAAA - RSS Channel - International Edition]]></title>\n" +
         "    <link> https://dp3ap2.jogjaprov.go.id/</link>\n" +
         "    <description>website DP3AP2</description>" +
+        "    <language>en-us</language>\n" +
         "   <image>\n" +
         "      <title>NYT &gt; World News</title>\n" +
         "      <url>https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png</url>\n" +
@@ -58,6 +59,7 @@ class ParseTest {
         assertThat(feed.publishDate).isNull()
         assertThat(feed.image).isNotNull()
         assertThat(feed.image!!.imageUrl).matches("https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png")
+        assertThat(feed.language).matches("en-us")
         assertThat(feed.items).hasSize(2)
     }
 

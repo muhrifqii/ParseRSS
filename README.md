@@ -25,8 +25,12 @@ It can capture these information from the RSS article:
 - [x] Description
 - [x] Link
 - [x] Publication Date
+- [x] Image
+- [x] Item GUId
+- [x] Language
 - [ ] Media
 - [ ] Author
+- [ ] Categories
 
 `ParseRSS` mainly has two main objects. `RSSFeedObject` and `RSSItemObject`.
 You can create your own parsing strategy by implementing `RSSFeed` and `RSSItem`.
