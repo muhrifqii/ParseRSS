@@ -79,7 +79,7 @@ object ParseRSS : ParseRSSPullParser {
                         }
                     }
                     ParseRSSKeyword.GUID -> {
-                        val isPerma = (parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, "isPermaLink") ?: "true")
+                        val isPerma = (parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_PERMALINK) ?: "true")
                             .toBoolean()
                         when {
                             isParsingItem -> item.guId = GUId(parser.nextText().trim(), isPerma)
