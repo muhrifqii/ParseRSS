@@ -8,68 +8,98 @@ import java.io.Reader
 import java.io.StringReader
 import java.util.*
 
-object ParseRSS: ParseRSSPullParser {
+object ParseRSS : ParseRSSPullParser {
     private var factory: XmlPullParserFactory? = null
 
+    /**
+     * ParseRSS Initialization. Call this method once on application start
+     */
     override fun init(pullParserFactory: XmlPullParserFactory) {
         factory = pullParserFactory
     }
 
+    /**
+     * Parse RSS from Reader Object
+     */
     @Suppress("UNCHECKED_CAST")
     @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
     override fun <R : RSSFeed> parse(xml: Reader): R {
         if (factory == null) throw ParseRSSException("xmlPullParserFactory is null. Should call ParseRSS.init() once.")
         val feed = RSSFeedObject()
         var item = RSSItemObject()
+        var image = RSSImageObject()
         factory!!.isNamespaceAware = false
         val parser = factory!!.newPullParser()
         parser.setInput(xml)
         var isParsingChannel = false
         var isParsingItem = false
+        var isParsingImage = false
         // start searching token
         var token = parser.eventType
         while (token != XmlPullParser.END_DOCUMENT) {
             if (token == XmlPullParser.START_TAG) {
-                val name = parser.name.toLowerCase(Locale.ENGLISH)
-                when (name) {
+                when (parser.name.toLowerCase(Locale.ENGLISH)) {
                     ParseRSSKeyword.CHANNEL -> isParsingChannel = true
                     ParseRSSKeyword.ITEM -> isParsingItem = true
+                    ParseRSSKeyword.IMAGE -> isParsingImage = true
                     ParseRSSKeyword.TITLE -> {
-                        if (isParsingItem)
-                            item.title = parser.nextText().trim()
-                        else if (isParsingChannel)
-                            feed.title = parser.nextText().trim()
+                        when {
+                            isParsingImage -> image.title = parser.nextText().trim()
+                            isParsingItem -> item.title = parser.nextText().trim()
+                            isParsingChannel -> feed.title = parser.nextText().trim()
+                        }
                     }
                     ParseRSSKeyword.DESCRIPTION -> {
-                        if (isParsingItem)
-                            item.description = parser.nextText().trim()
-                        else if (isParsingChannel)
-                            feed.description = parser.nextText().trim()
+                        when {
+                            isParsingItem -> item.description = parser.nextText().trim()
+                            isParsingChannel -> feed.description = parser.nextText().trim()
+                        }
                     }
                     ParseRSSKeyword.LINK -> {
-                        if (isParsingItem)
-                            item.link = parser.nextText().trim()
-                        else if (isParsingChannel)
-                            feed.link = parser.nextText().trim()
+                        when {
+                            isParsingImage -> image.link = parser.nextText().trim()
+                            isParsingItem -> item.link = parser.nextText().trim()
+                            isParsingChannel -> feed.link = parser.nextText().trim()
+                        }
                     }
                     ParseRSSKeyword.PUBLISH_DATE -> {
-                        if (isParsingItem)
-                            item.publishDate = parser.nextText().trim()
-                        else if (isParsingChannel)
-                            feed.publishDate = parser.nextText().trim()
+                        when {
+                            isParsingItem -> item.publishDate = parser.nextText().trim()
+                            isParsingChannel -> feed.publishDate = parser.nextText().trim()
+                        }
+                    }
+                    ParseRSSKeyword.URL -> {
+                        when {
+                            isParsingImage -> image.imageUrl = parser.nextText().trim()
+                        }
+                    }
+                    ParseRSSKeyword.GUID -> {
+                        val isPerma = (parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, "isPermaLink") ?: "true")
+                            .toBoolean()
+                        when {
+                            isParsingItem -> item.guId = GUId(parser.nextText().trim(), isPerma)
+                        }
                     }
                 }
-            } else if (token == XmlPullParser.END_TAG &&
-                parser.name.equals(ParseRSSKeyword.ITEM, true)) {
-                isParsingItem = false
-                feed.items.add(item)
-                item = RSSItemObject()
+            } else if (token == XmlPullParser.END_TAG) {
+                if (parser.name.equals(ParseRSSKeyword.IMAGE, true)) {
+                    isParsingImage = false
+                    feed.image = image
+                    image = RSSImageObject()
+                } else if (parser.name.equals(ParseRSSKeyword.ITEM, true)) {
+                    isParsingItem = false
+                    feed.items.add(item)
+                    item = RSSItemObject()
+                }
             }
             token = parser.next()
         }
         return feed as R
     }
 
+    /**
+     * Parse RSS from xml String
+     */
     @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
     override fun <R : RSSFeed> parse(xml: String): R {
         return parse(StringReader(xml))
