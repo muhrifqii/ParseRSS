@@ -28,7 +28,7 @@ It can capture these information from the RSS article:
 - [x] Image
 - [x] Item GUId
 - [x] Language
-- [ ] Media
+- [x] Media
 - [ ] Author
 - [ ] Categories
 

@@ -33,6 +33,7 @@ object ParseRSS : ParseRSSPullParser {
         val feed = applyRSSFeedConstructor()
         var item = RSSItemObject()
         var image = RSSImageObject()
+        var media = RSSMediaObject()
         factory!!.isNamespaceAware = false
         val parser = factory!!.newPullParser()
         parser.setInput(xml)
@@ -79,8 +80,10 @@ object ParseRSS : ParseRSSPullParser {
                         }
                     }
                     ParseRSSKeyword.GUID -> {
-                        val isPerma = (parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_PERMALINK) ?: "true")
-                            .toBoolean()
+                        val isPerma =
+                            (parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_PERMALINK)
+                                ?: "true")
+                                .toBoolean()
                         when {
                             isParsingItem -> item.guId = GUId(parser.nextText().trim(), isPerma)
                         }
@@ -90,16 +93,40 @@ object ParseRSS : ParseRSSPullParser {
                             isParsingChannel -> feed.language = parser.nextText().trim()
                         }
                     }
+                    ParseRSSKeyword.MEDIA_CONTENT -> {
+                        media = RSSMediaObject()
+                        media.url =
+                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
+                        media.medium = MediaType.from(
+                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_MEDIUM)
+                        )
+                        media.width =
+                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_WIDTH)
+                                .toInt()
+                        media.height =
+                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HEIGHT)
+                                .toInt()
+                        item.media.add(media)
+                    }
+                    ParseRSSKeyword.MEDIA_CREDIT -> {
+                        media.credit = parser.nextText().trim()
+                    }
+                    ParseRSSKeyword.MEDIA_DESC -> {
+                        media.description = parser.nextText().trim()
+                    }
                 }
             } else if (token == XmlPullParser.END_TAG) {
-                if (parser.name.equals(ParseRSSKeyword.IMAGE, true)) {
-                    isParsingImage = false
-                    feed.image = image
-                    image = RSSImageObject()
-                } else if (parser.name.equals(ParseRSSKeyword.ITEM, true)) {
-                    isParsingItem = false
-                    feed.items.add(item)
-                    item = RSSItemObject()
+                when (parser.name.toLowerCase(Locale.ENGLISH)) {
+                    ParseRSSKeyword.IMAGE -> {
+                        isParsingImage = false
+                        feed.image = image
+                        image = RSSImageObject()
+                    }
+                    ParseRSSKeyword.ITEM -> {
+                        isParsingItem = false
+                        feed.items.add(item)
+                        item = RSSItemObject()
+                    }
                 }
             }
             token = parser.next()

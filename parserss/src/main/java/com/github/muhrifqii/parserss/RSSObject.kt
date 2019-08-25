@@ -18,11 +18,39 @@ interface RSSItem: RSSObject {
     var link: String?
     var publishDate: String?
     var guId: GUId?
+    var media: MutableList<RSSMedia>
 }
 interface RSSImage: RSSObject {
     var imageUrl: String
     var title: String?
     var link: String?
+}
+interface RSSMedia: RSSObject {
+    var height: Int
+    var width: Int
+    var medium: MediaType
+    var url: String
+
+    var credit: String?
+    var description: String?
+}
+
+enum class MediaType(val rawValue: String) {
+    Image("image"), Video("video"), Unspecified("");
+
+    override fun toString(): String {
+        return rawValue
+    }
+
+    companion object {
+        fun from(rawValue: String) : MediaType {
+            return when (rawValue) {
+                "image" -> Image
+                "video" -> Video
+                else -> Unspecified
+            }
+        }
+    }
 }
 
 data class GUId (
@@ -38,14 +66,15 @@ data class RSSFeedObject(
     override var language: String? = null,
     override var image: RSSImage? = null,
     override var items: MutableList<RSSItem> = mutableListOf()
-): RSSFeed
+): Serializable, RSSFeed
 
 data class RSSItemObject(
     override var title: String? = null,
     override var description: String? = null,
     override var link: String? = null,
     override var publishDate: String? = null,
-    override var guId: GUId? = null
+    override var guId: GUId? = null,
+    override var media: MutableList<RSSMedia> = mutableListOf()
 ): Serializable, RSSItem
 
 data class RSSImageObject (
@@ -53,3 +82,12 @@ data class RSSImageObject (
     override var link: String? = null,
     override var title: String? = null
 ): Serializable, RSSImage
+
+data class RSSMediaObject(
+    override var medium: MediaType = MediaType.Unspecified,
+    override var url: String = "",
+    override var width: Int = 0,
+    override var height: Int = 0,
+    override var credit: String? = null,
+    override var description: String? = null
+): Serializable, RSSMedia
