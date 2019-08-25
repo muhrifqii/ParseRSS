@@ -21,16 +21,16 @@
 
 Simple, concise, and extensible RSS Parser in the entire coffee shop.
 It can capture these information from the RSS article:
-- [x] Title
-- [x] Description
-- [x] Link
-- [x] Publication Date
-- [x] Image
-- [x] Item GUId
-- [x] Language
-- [x] Media
-- [ ] Author
-- [ ] Categories
+- [x]  Title
+- [x]  Description
+- [x]  Link
+- [x]  Publication Date
+- [x]  Image
+- [x]  Item GUId
+- [x]  Language
+- [x]  Media
+- [ ]  Author
+- [ ]  Categories
 
 `ParseRSS` mainly has two main objects. `RSSFeedObject` and `RSSItemObject`.
 You can create your own parsing strategy by implementing `RSSFeed` and `RSSItem`.
@@ -114,7 +114,7 @@ implementation "com.github.muhrifqii.ParseRSS:retrofit:$version"
 ```
 
 ## License
-```
+```text
 Copyright (c) 2019 Muhammad Rifqi Fatchurrahman
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
