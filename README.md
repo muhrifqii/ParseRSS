@@ -15,6 +15,7 @@
     <img src="https://api.codacy.com/project/badge/Grade/80070eb57e6f456f9e89a4d65da0c7fd"/>
   </a>
   <a href="https://www.codefactor.io/repository/github/muhrifqii/parserss/overview/master"><img src="https://www.codefactor.io/repository/github/muhrifqii/parserss/badge/master" alt="CodeFactor" /></a>
+  <a href="https://codebeat.co/projects/github-com-muhrifqii-parserss-master"><img alt="codebeat badge" src="https://codebeat.co/badges/b4cf5384-6139-4256-90c0-fe432ad648a4" /></a>
 </p>
 <div align="center"><sup>RSS Parser for android<sup></div>
 <br/>
