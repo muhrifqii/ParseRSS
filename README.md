@@ -14,6 +14,7 @@
   <a href="https://www.codacy.com/app/muhrifqii/ParseRSS?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=muhrifqii/ParseRSS&amp;utm_campaign=Badge_Grade">
     <img src="https://api.codacy.com/project/badge/Grade/80070eb57e6f456f9e89a4d65da0c7fd"/>
   </a>
+  <a href="https://www.codefactor.io/repository/github/muhrifqii/parserss/overview/master"><img src="https://www.codefactor.io/repository/github/muhrifqii/parserss/badge/master" alt="CodeFactor" /></a>
 </p>
 <div align="center"><sup>RSS Parser for android<sup></div>
 <br/>
@@ -21,16 +22,17 @@
 
 Simple, concise, and extensible RSS Parser in the entire coffee shop.
 It can capture these information from the RSS article:
-- [x]  Title
-- [x]  Description
-- [x]  Link
-- [x]  Publication Date
-- [x]  Image
-- [x]  Item GUId
-- [x]  Language
-- [x]  Media
-- [ ]  Author
-- [ ]  Categories
+
+- [x] Title
+- [x] Description
+- [x] Link
+- [x] Publication Date
+- [x] Image
+- [x] Item GUId
+- [x] Language
+- [x] Media
+- [ ] Author
+- [ ] Categories
 
 `ParseRSS` mainly has two main objects. `RSSFeedObject` and `RSSItemObject`.
 You can create your own parsing strategy by implementing `RSSFeed` and `RSSItem`.
