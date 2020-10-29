@@ -19,6 +19,7 @@ interface RSSItem: RSSObject {
     var publishDate: String?
     var guId: GUId?
     var media: MutableList<RSSMedia>
+    var author: String?
 }
 interface RSSImage: RSSObject {
     var imageUrl: String
@@ -74,7 +75,8 @@ data class RSSItemObject(
     override var link: String? = null,
     override var publishDate: String? = null,
     override var guId: GUId? = null,
-    override var media: MutableList<RSSMedia> = mutableListOf()
+    override var media: MutableList<RSSMedia> = mutableListOf(),
+    override var author: String? = null
 ): Serializable, RSSItem
 
 data class RSSImageObject (

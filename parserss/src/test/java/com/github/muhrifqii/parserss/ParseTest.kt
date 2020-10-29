@@ -1,6 +1,6 @@
 package com.github.muhrifqii.parserss
 
-import com.google.common.truth.Truth.*
+import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.xmlpull.v1.XmlPullParserFactory
@@ -28,6 +28,7 @@ internal const val xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
         "      <media:content height=\"151\" medium=\"image\" url=\"https://static01.nyt.com/images/2019/08/25/world/25europe-climate/merlin_159634833_bcca0a79-3684-4fa2-9c42-b11095bc196e-moth.jpg\" width=\"151\"></media:content>\n" +
         "      <media:credit>Leo Correa/Associated Press</media:credit>\n" +
         "      <media:description>Under increasing international pressure to contain fires sweeping parts of the Amazon, President Jair Bolsonaro of Brazil on Friday authorized use of the military to battle the massive blazes.</media:description>" +
+        "      <author>John Doe</author>" +
         "    </item>\n" +
         "    <item>\n" +
         "      <guid isPermaLink=\"false\">trump-g7-summit</guid>\n" +
@@ -88,6 +89,7 @@ class ParseTest {
         assertThat(item1.description).startsWith("Yogyakarta, BPPM- Anak adalah")
         assertThat(item1.media).hasSize(1)
         assertThat(item1.media[0].credit).matches("Leo Correa/Associated Press")
+        assertThat(item1.author).matches("John Doe")
         val item2 = feed.items[1]
         assertThat(item2.guId).isNotNull()
         assertThat(item2.guId!!.isPermaLink).isFalse()
