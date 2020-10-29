@@ -8,10 +8,13 @@ class ExceptionTest {
     @get:Rule
     val exception = ExpectedException.none()
 
-    @Test
+    @Test()
     fun ParseRSS_ThrowException() {
         exception.expect(ParseRSSException::class.java)
-        exception.expectMessage("xmlPullParserFactory is null. Should call ParseRSS.init() once.")
-        ParseRSS.parse<RSSFeedObject>(xml)
+        try {
+            ParseRSS.parse<RSSFeedObject>(xml)
+        } catch (err: ParseRSSException) {
+            throw ParseRSSException(err.message!!)
+        }
     }
 }
