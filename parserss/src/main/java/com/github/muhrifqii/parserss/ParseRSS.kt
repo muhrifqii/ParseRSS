@@ -114,6 +114,11 @@ object ParseRSS : ParseRSSPullParser {
                     ParseRSSKeyword.MEDIA_DESC -> {
                         media.description = parser.nextText().trim()
                     }
+                    ParseRSSKeyword.AUTHOR -> {
+                        when {
+                            isParsingItem -> item.author = parser.nextText().trim()
+                        }
+                    }
                 }
             } else if (token == XmlPullParser.END_TAG) {
                 when (parser.name.toLowerCase(Locale.ENGLISH)) {

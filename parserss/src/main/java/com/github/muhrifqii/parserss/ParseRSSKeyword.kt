@@ -17,6 +17,7 @@ internal object ParseRSSKeyword {
     const val URL = "url"
     const val LANG = "language"
     const val CATEGORY = "category"
+    const val AUTHOR = "author"
 
     const val ATTR_PERMALINK = "isPermaLink"
     const val ATTR_DOMAIN = "domain"
