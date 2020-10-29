@@ -29,6 +29,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     implementation 'com.google.android.material:material:1.0.0-beta01'
 
+    implementation 'com.github.kittinunf.fuel:fuel:2.2.0'
+
     implementation 'com.github.muhrifqii.ParseRSS:parserss:0.2.1'
     implementation 'com.github.muhrifqii.ParseRSS:fuel:0.2.1'
     implementation 'com.github.muhrifqii.ParseRSS:retrofit:0.2.1'
