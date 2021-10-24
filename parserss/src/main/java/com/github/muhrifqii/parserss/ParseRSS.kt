@@ -18,6 +18,10 @@ object ParseRSS : ParseRSSPullParser {
         factory = pullParserFactory
     }
 
+    override fun release() {
+        factory = null;
+    }
+
     /**
      * RSS Feed constructor function for generic RSSFeed object
      */

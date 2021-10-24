@@ -2,6 +2,7 @@ package com.github.muhrifqii.parserss
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.StringReader
@@ -56,16 +57,23 @@ internal const val xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
         "</rss>"
 
 class ParseTest {
+    companion object {
+        @BeforeClass
+        @JvmStatic
+        fun configureClass() {
+            ParseRSS.init(XmlPullParserFactory.newInstance())
+        }
+    }
+
     lateinit var feed: RSSFeedObject
 
     @Before
     fun configure() {
-        ParseRSS.init(XmlPullParserFactory.newInstance())
         feed = ParseRSS.parse(xml)
     }
 
     @Test
-    fun validRSSFeed_Reader() {
+    fun validRSSFeedReader() {
         val reader = StringReader(xml)
         val feed: RSSFeedObject = ParseRSS.parse(reader)
         assertThat(feed.title).matches("AAAA - RSS Channel - International Edition")
