@@ -119,6 +119,14 @@ object ParseRSS : ParseRSSPullParser {
                             isParsingItem -> item.author = parser.nextText().trim()
                         }
                     }
+                    ParseRSSKeyword.CATEGORY -> {
+                        val domain = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_DOMAIN)
+                        when {
+                            isParsingItem -> item.category.add(
+                                RSSCategoryObject(domain = domain, name = parser.nextText())
+                            )
+                        }
+                    }
                 }
             } else if (token == XmlPullParser.END_TAG) {
                 when (parser.name.toLowerCase(Locale.ENGLISH)) {

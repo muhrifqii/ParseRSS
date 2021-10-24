@@ -33,7 +33,7 @@ It can capture these information from the RSS article:
 - [x] Language
 - [x] Media
 - [x] Author
-- [ ] Categories
+- [x] Categories
 
 `ParseRSS` mainly has two main objects. `RSSFeedObject` and `RSSItemObject`.
 You can create your own parsing strategy by implementing `RSSFeed` and `RSSItem`.
