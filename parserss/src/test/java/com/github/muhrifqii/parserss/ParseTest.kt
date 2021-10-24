@@ -29,6 +29,8 @@ internal const val xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
         "      <media:credit>Leo Correa/Associated Press</media:credit>\n" +
         "      <media:description>Under increasing international pressure to contain fires sweeping parts of the Amazon, President Jair Bolsonaro of Brazil on Friday authorized use of the military to battle the massive blazes.</media:description>" +
         "      <author>John Doe</author>" +
+        "      <category>News</category>" +
+        "      <category domain=\"http://www.nytimes.com/namespaces/keywords/nyt_geo\">Indonesia</category>" +
         "    </item>\n" +
         "    <item>\n" +
         "      <guid isPermaLink=\"false\">trump-g7-summit</guid>\n" +
@@ -90,6 +92,8 @@ class ParseTest {
         assertThat(item1.media).hasSize(1)
         assertThat(item1.media[0].credit).matches("Leo Correa/Associated Press")
         assertThat(item1.author).matches("John Doe")
+        assertThat(item1.category).hasSize(2)
+        assertThat(item1.category[1].domain).matches("http://www.nytimes.com/namespaces/keywords/nyt_geo")
         val item2 = feed.items[1]
         assertThat(item2.guId).isNotNull()
         assertThat(item2.guId!!.isPermaLink).isFalse()
