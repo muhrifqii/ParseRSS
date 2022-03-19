@@ -24,6 +24,13 @@
 Simple, concise, and extensible RSS Parser in the entire coffee shop.
 It can capture these information from the RSS article:
 
+- RSS Version based on https://validator.w3.org/feed/docs/
+  - [ ] [Atom](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc4287.html)
+  - [ ] [RSS V1](https://validator.w3.org/feed/docs/rss1.html#s5.2)
+  - [x] [RSS V0.91](https://www.rssboard.org/rss-specification)
+  - [x] [RSS V0.92](https://www.rssboard.org/rss-specification)
+  - [x] [RSS V2](https://www.rssboard.org/rss-specification)
+  - [ ] Specific Version Handling
 - RSS Namespace Checking
   - [ ] Atom
   - [ ] DC
