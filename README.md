@@ -5,14 +5,17 @@
   <a href="https://jitpack.io/#muhrifqii/ParseRSS">
     <img src="https://jitpack.io/v/muhrifqii/ParseRSS.svg" />
   </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/kotlin-1.6.10-yellow"/>
+  </a>
   <a href="https://travis-ci.org/muhrifqii/ParseRSS">
     <img src="https://travis-ci.org/muhrifqii/ParseRSS.svg?branch=master" />
   </a>
   <a href="https://github.com/muhrifqii/ParseRSS/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-BLUE.svg" />
+    <img src="https://img.shields.io/badge/license-MIT-blue" />
   </a>  
-  <a href="https://www.codacy.com/app/muhrifqii/ParseRSS?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=muhrifqii/ParseRSS&amp;utm_campaign=Badge_Grade">
-    <img src="https://api.codacy.com/project/badge/Grade/80070eb57e6f456f9e89a4d65da0c7fd"/>
+  <a href="https://www.codacy.com/gh/muhrifqii/ParseRSS/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=muhrifqii/ParseRSS&amp;utm_campaign=Badge_Grade">
+    <img src="https://app.codacy.com/project/badge/Grade/78c8325c65d649719dc627c1e803e647"/>
   </a>
   <a href="https://www.codefactor.io/repository/github/muhrifqii/parserss/overview/master"><img src="https://www.codefactor.io/repository/github/muhrifqii/parserss/badge/master" alt="CodeFactor" /></a>
   <a href="https://codebeat.co/projects/github-com-muhrifqii-parserss-master"><img alt="codebeat badge" src="https://codebeat.co/badges/b4cf5384-6139-4256-90c0-fe432ad648a4" /></a>
@@ -21,8 +24,8 @@
 <br/>
 <br/>
 
-Simple, concise, and extensible RSS Parser in the entire coffee shop.
-It can capture these information from the RSS article:
+Simple, concise, and extensible RSS Parser in the entire coffee shop. It can capture these information from the RSS
+article:
 
 - RSS Version based on https://validator.w3.org/feed/docs/
   - [ ] [Atom](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc4287.html)
@@ -112,14 +115,18 @@ Fuel.get(URL).responseRss<RSSFeedObject> { result ->
   })
 }
 ```
+
 #### Retrofit
+
 Convert Retrofit Response into RSSFeed by using `ParseRSSConverterFactory`
+
 ```kotlin
 interface MyRssService {
     @GET("rss")
     fun rss(): Call<RSSFeedObject>
 }
 ```
+
 ```kotlin
 val retrofit = Retrofit.Builder()
     .addConverterFactory(ParseRSSConverterFactory.create<RSSFeedObject>())
@@ -134,8 +141,11 @@ rssService.rss().enqueue(object : Callback<RSSFeedObject> {
     }
 })
 ```
+
 ## Gradle Dependency
+
 Add jitpack repository in your **root** `build.gradle` at the end of repositories:
+
 ```gradle
 allprojects {
     repositories {
@@ -144,13 +154,17 @@ allprojects {
     }
 }
 ```
+
 ### Used on Fuel
+
 ```gradle
 // ParseRSS as Fuel Converter Factory
 implementation "com.github.muhrifqii.ParseRSS:parserss:$version"
 implementation "com.github.muhrifqii.ParseRSS:fuel:$version"
 ```
+
 ### Used on Retrofit
+
 ```gradle
 // ParseRSS as Retrofit Converter Factory
 implementation "com.github.muhrifqii.ParseRSS:parserss:$version"
@@ -158,6 +172,7 @@ implementation "com.github.muhrifqii.ParseRSS:retrofit:$version"
 ```
 
 ## License
+
 ```text
 Copyright (c) 2019 Muhammad Rifqi Fatchurrahman
 

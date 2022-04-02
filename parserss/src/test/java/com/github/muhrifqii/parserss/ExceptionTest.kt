@@ -1,14 +1,15 @@
 package com.github.muhrifqii.parserss
 
+import com.github.muhrifqii.parserss.samples.Feed
 import org.junit.Assert
 import org.junit.Test
 
 class ExceptionTest {
     @Test()
-    fun ParseRSSThrowException() {
+    fun parseRSSThrowException() {
         Assert.assertThrows(ParseRSSException::class.java) {
             ParseRSS.release()
-            ParseRSS.parse<RSSFeedObject>(xml)
+            ParseRSS.parse<RSSFeedObject>(Feed.rssV2EnUS)
         }
     }
 }

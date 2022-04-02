@@ -5,9 +5,14 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.StringReader
 
+@RunWith(value = RobolectricTestRunner::class)
+@Config(manifest = Config.NONE)
 class ParseTest {
     companion object {
         @BeforeClass
