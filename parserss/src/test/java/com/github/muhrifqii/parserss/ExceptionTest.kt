@@ -4,7 +4,7 @@ import com.github.muhrifqii.parserss.samples.Feed
 import org.junit.Assert
 import org.junit.Test
 
-class ExceptionTest {
+class ExceptionTest : AbstractTest() {
     @Test()
     fun parseRSSThrowException() {
         Assert.assertThrows(ParseRSSException::class.java) {

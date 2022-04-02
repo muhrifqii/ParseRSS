@@ -3,26 +3,12 @@ package com.github.muhrifqii.parserss
 import com.github.muhrifqii.parserss.samples.Feed
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-import org.xmlpull.v1.XmlPullParserFactory
 import java.io.StringReader
 
-@RunWith(value = RobolectricTestRunner::class)
-@Config(manifest = Config.NONE)
-class ParseTest {
-    companion object {
-        @BeforeClass
-        @JvmStatic
-        fun configureClass() {
-            ParseRSS.init(XmlPullParserFactory.newInstance())
-        }
-    }
+class ParseTest : AbstractTest() {
 
-    lateinit var feed: RSSFeedObject
+    private lateinit var feed: RSSFeedObject
     private val xml = Feed.rssV2EnUS
 
     @Before
