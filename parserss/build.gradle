@@ -4,14 +4,14 @@ apply plugin: 'kotlin-android'
 group 'com.github.muhrifqii.ParseRSS'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '28.0.3'
+    compileSdkVersion compilesdk_version as int
+    //noinspection GradleDependency
+    buildToolsVersion buildtools_version
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion minsdk_version
+        targetSdkVersion targetsdk_version
+        versionCode project_version_code as int
+        versionName project_version
     }
 }
 
