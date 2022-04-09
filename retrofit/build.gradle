@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply from: '../reportings.gradle'
 
 group 'com.github.muhrifqii.ParseRSS'
 

@@ -6,7 +6,6 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
 import java.io.Reader
 import java.io.StringReader
-import java.util.*
 
 object ParseRSS : ParseRSSPullParser {
     private var factory: XmlPullParserFactory? = null
@@ -19,7 +18,7 @@ object ParseRSS : ParseRSSPullParser {
     }
 
     override fun release() {
-        factory = null;
+        factory = null
     }
 
     /**
@@ -48,7 +47,7 @@ object ParseRSS : ParseRSSPullParser {
         var token = parser.eventType
         while (token != XmlPullParser.END_DOCUMENT) {
             if (token == XmlPullParser.START_TAG) {
-                when (parser.name.toLowerCase(Locale.ENGLISH)) {
+                when (parser.name.lowercase()) {
                     ParseRSSKeyword.CHANNEL -> isParsingChannel = true
                     ParseRSSKeyword.ITEM -> isParsingItem = true
                     ParseRSSKeyword.IMAGE -> isParsingImage = true
@@ -86,8 +85,7 @@ object ParseRSS : ParseRSSPullParser {
                     ParseRSSKeyword.GUID -> {
                         val isPerma =
                             (parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_PERMALINK)
-                                ?: "true")
-                                .toBoolean()
+                                ?: "true").toBoolean()
                         when {
                             isParsingItem -> item.guId = GUId(parser.nextText().trim(), isPerma)
                         }
@@ -99,17 +97,14 @@ object ParseRSS : ParseRSSPullParser {
                     }
                     ParseRSSKeyword.MEDIA_CONTENT -> {
                         media = RSSMediaObject()
-                        media.url =
-                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
+                        media.url = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
                         media.medium = MediaType.from(
                             parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_MEDIUM)
                         )
                         media.width =
-                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_WIDTH)
-                                .toInt()
+                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_WIDTH).toInt()
                         media.height =
-                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HEIGHT)
-                                .toInt()
+                            parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HEIGHT).toInt()
                         item.media.add(media)
                     }
                     ParseRSSKeyword.MEDIA_CREDIT -> {
@@ -133,7 +128,7 @@ object ParseRSS : ParseRSSPullParser {
                     }
                 }
             } else if (token == XmlPullParser.END_TAG) {
-                when (parser.name.toLowerCase(Locale.ENGLISH)) {
+                when (parser.name.lowercase()) {
                     ParseRSSKeyword.IMAGE -> {
                         isParsingImage = false
                         feed.image = image

@@ -3,8 +3,21 @@ plugins {
     id 'com.android.library' version "${agp_version}" apply false
     id 'org.jetbrains.kotlin.android' version "${kotlin_version}" apply false
     id "io.gitlab.arturbosch.detekt" version "1.20.0-RC2"
+    id "com.diffplug.spotless" version "6.4.1" apply false
 }
+apply from: 'root-reportings.gradle'
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config = files("$projectDir/detekt-config.yml")
+    parallel = true
+}
+
+dependencies {
+    detektPlugins('io.gitlab.arturbosch.detekt:detekt-formatting:1.20.0-RC2')
 }
