@@ -12,4 +12,8 @@ class ExceptionTest : AbstractTest() {
             ParseRSS.parse<RSSFeedObject>(Feed.rssV2EnUS)
         }
     }
+
+    override fun configure() {
+        // ignore
+    }
 }

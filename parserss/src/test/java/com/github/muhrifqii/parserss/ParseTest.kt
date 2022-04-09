@@ -2,7 +2,6 @@ package com.github.muhrifqii.parserss
 
 import com.github.muhrifqii.parserss.samples.Feed
 import com.google.common.truth.Truth.assertThat
-import org.junit.Before
 import org.junit.Test
 import java.io.StringReader
 
@@ -11,8 +10,7 @@ class ParseTest : AbstractTest() {
     private lateinit var feed: RSSFeedObject
     private val xml = Feed.rssV2EnUS
 
-    @Before
-    fun configure() {
+    override fun configure() {
         feed = ParseRSS.parse(xml)
     }
 
