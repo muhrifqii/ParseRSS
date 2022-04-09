@@ -63,10 +63,11 @@ enum class MediaType(val rawValue: String) {
     }
 }
 
-data class GUId (
+@SuppressWarnings("SerialVersionUIDInSerializableClass")
+data class GUId(
     val value: String,
     val isPermaLink: Boolean
-): Serializable
+) : Serializable
 
 data class RSSFeedObject(
     override var title: String? = null,

@@ -1,5 +1,6 @@
 package com.github.muhrifqii.parserss
 
+import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.FixMethodOrder
@@ -18,6 +19,12 @@ abstract class AbstractTest {
         @JvmStatic
         fun configureClass() {
             ParseRSS.init(XmlPullParserFactory.newInstance())
+        }
+
+        @AfterClass
+        @JvmStatic
+        fun release() {
+            ParseRSS.release()
         }
     }
 
