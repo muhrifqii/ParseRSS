@@ -17,8 +17,11 @@ class ParseTest : AbstractTest() {
     @Test
     fun validRSSFeedReader() {
         val reader = StringReader(xml)
-        val feed: RSSFeedObject = ParseRSS.parse(reader)
-        assertThat(feed.title).matches("AAAA - RSS Channel - International Edition")
+        val feed: RSSFeedObject = ParseRSS.parse(reader) {
+            RSSFeedObject()
+        }
+        assertThat(feed.title)
+            .matches("AAAA - RSS Channel - International Edition")
     }
 
     @Test
@@ -27,7 +30,7 @@ class ParseTest : AbstractTest() {
         assertThat(feed.link).matches("https://dp3ap2.jogjaprov.go.id/")
         assertThat(feed.publishDate).isNull()
         assertThat(feed.image).isNotNull()
-        assertThat(feed.image!!.imageUrl).matches("https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png")
+        assertThat(feed.image!!.url).matches("https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png")
         assertThat(feed.language).matches("en-us")
         assertThat(feed.items).hasSize(2)
     }

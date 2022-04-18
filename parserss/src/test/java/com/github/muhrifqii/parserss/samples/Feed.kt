@@ -3,7 +3,7 @@ package com.github.muhrifqii.parserss.samples
 object Feed {
     const val rssV2EnUS = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
             "<!-- Generated on Mon, 19 Aug 2019 10:54:07 +0000 -->\n" +
-            "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" +
+            "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:media=\"http://search.yahoo.com/mrss/\">\n " +
             "  <channel>\n" +
             "    <atom:link href=\"http://dp3ap2.jogjaprov.go.id/frontend/index.php\" rel=\"self\" type=\"application/rss+xml\" />\n" +
             "    <title><![CDATA[AAAA - RSS Channel - International Edition]]></title>\n" +
@@ -50,5 +50,3 @@ object Feed {
             "  </channel>\n" +
             "</rss>"
 }
-
-
