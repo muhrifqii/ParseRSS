@@ -1,6 +1,7 @@
 package com.github.muhrifqii.parserss
 
 data class RSSFeedObject(
+    override var version: RSSVersion = RSSVersion.TBD,
     override var title: String? = null,
     override var description: String? = null,
     override var link: String? = null,

@@ -1,6 +1,7 @@
 package com.github.muhrifqii.parserss
 
 import com.github.muhrifqii.parserss.samples.Feed
+import com.github.muhrifqii.parserss.utils.toPrefixNamedElement
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import java.io.StringReader
@@ -15,13 +16,21 @@ class ParseTest : AbstractTest() {
     }
 
     @Test
+    fun rssNamePrefixedCheck() {
+        assertThat("item".toPrefixNamedElement().prefix).isEmpty()
+        assertThat("item".toPrefixNamedElement().name).isEqualTo("item")
+        assertThat("xmlns:rdf".toPrefixNamedElement().prefix).isEqualTo("xmlns")
+        assertThat("xmlns:rdf".toPrefixNamedElement().name).isEqualTo("rdf")
+    }
+
+    @Test
     fun validRSSFeedReader() {
-        val reader = StringReader(xml)
-        val feed: RSSFeedObject = ParseRSS.parse(reader) {
+        val feed1 = ParseRSS.parse(StringReader(xml), false) {
             RSSFeedObject()
         }
-        assertThat(feed.title)
-            .matches("AAAA - RSS Channel - International Edition")
+        val feed2: RSSFeedObject = ParseRSS.parse(StringReader(xml))
+        assertThat(feed1.title).matches("AAAA - RSS Channel - International Edition")
+        assertThat(feed2.title).matches("AAAA - RSS Channel - International Edition")
     }
 
     @Test

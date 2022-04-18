@@ -14,5 +14,5 @@ interface ParseRSSOperation {
     fun <R : RSSFeed> parse(xml: String): R
 
     @Throws(ParseRSSException::class)
-    fun <T : RSSFeed> parse(xml: Reader, feedSupplier: () -> T): T
+    fun <T : RSSFeed> parse(xml: Reader, strictlyNamespaceChecking: Boolean, feedSupplier: () -> T): T
 }

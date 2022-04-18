@@ -1,17 +1,41 @@
 package com.github.muhrifqii.parserss
 
+import com.github.muhrifqii.parserss.utils.lastValue
+
+/**
+ * Base Parsing Mode Operation
+ */
+sealed interface ParsingModeOperation {
+    fun resetObject()
+}
+
+/**
+ * Get RSS version of [ParsingModeOperation]
+ */
+internal fun ParsingModeOperation.version(): RSSVersion {
+    return when (this) {
+        is RootDocument.RSS -> RSSVersion.RSS_V2
+        is RootDocument.RDF -> RSSVersion.RSS_V1
+        else -> RSSVersion.TBD
+    }
+}
+
 /**
  * ParseRSS Stateful Parser Mode
  */
-sealed class ParsingMode(val nameToken: String) {
+sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
 
-    open fun resetObject() {
+    override fun resetObject() {
+        // ignore
     }
 
-    class Channel(val rssObject: RSSFeed) : ParsingMode(ParseRSSKeyword.CHANNEL)
+    /**
+     * Place to storing the rss feed
+     */
+    data class Channel(val rssObject: RSSFeed, val isToC: Boolean) : ParsingMode(ParseRSSKeyword.CHANNEL)
 
     /**
-     *
+     * Item mode to parse an item element
      */
     object Item : ParsingMode(ParseRSSKeyword.ITEM) {
         var rssObject: RSSItem = RSSItemObject()
@@ -37,9 +61,9 @@ sealed class ParsingMode(val nameToken: String) {
     /**
      * MediaNS mode should and must go under [Item] mode
      */
-    sealed class MediaNS {
+    sealed interface MediaNS {
 
-        object Group : ParsingMode(ParseRSSKeyword.MEDIA_GROUP) {
+        object Group : ParsingMode(ParseRSSKeyword.GROUP), MediaNS {
             var rssObject: MediaEnabledObject = Item.rssObject
                 private set
 
@@ -54,11 +78,16 @@ sealed class ParsingMode(val nameToken: String) {
      */
     class Read : ParsingMode("") {
 
-        private val modes: LinkedHashMap<String, ParsingMode> = LinkedHashMap()
+        private val modes: LinkedHashMap<String, ParsingModeOperation> = LinkedHashMap()
 
         operator fun plusAssign(other: ParsingMode) {
             when (other) {
                 is Read -> return
+                is Channel -> {
+                    val rootVersion = modes[RootDocument.token] ?: throw ParseRSSException("RSS not supported")
+                    other.rssObject.version = rootVersion.version()
+                    modes[other.nameToken] = other
+                }
                 else -> {
                     other.resetObject()
                     modes[other.nameToken] = other
@@ -84,6 +113,8 @@ sealed class ParsingMode(val nameToken: String) {
                     is Image -> valueSetter(clazz.cast(mode.rssObject))
                     is Item -> valueSetter(clazz.cast(mode.rssObject))
                     is Channel -> valueSetter(clazz.cast(mode.rssObject))
+                    RootDocument.RDF -> {}
+                    RootDocument.RSS -> {}
                 }
             } catch (err: ClassCastException) {
                 throw ParseRSSException(
@@ -120,4 +151,20 @@ operator fun <T : RSSObject> ParsingMode.set(field: Class<T>, valueSetter: (T?) 
         }
         else -> return
     }
+}
+
+sealed interface RootDocument : ParsingModeOperation {
+    companion object {
+        const val token = ">>>root"
+    }
+
+    /**
+     * Mode to parse root information for RSS type (v2)
+     */
+    object RSS : ParsingMode(token), RootDocument
+
+    /**
+     * Mode to parse root information for RDF type (v1)
+     */
+    object RDF : ParsingMode(token), RootDocument
 }

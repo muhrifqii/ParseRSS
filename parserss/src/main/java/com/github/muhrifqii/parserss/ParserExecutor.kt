@@ -1,5 +1,10 @@
 package com.github.muhrifqii.parserss
 
+import com.github.muhrifqii.parserss.utils.ParseRSSElement
+import com.github.muhrifqii.parserss.utils.ParserExecutorUtils
+import com.github.muhrifqii.parserss.utils.getRSSAttributeElement
+import com.github.muhrifqii.parserss.utils.getRSSElement
+import com.github.muhrifqii.parserss.utils.nextTextTrimmed
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.Reader
@@ -7,15 +12,18 @@ import java.io.Reader
 class ParserExecutor<T>(
     factory: XmlPullParserFactory,
     private val input: Reader,
+    strictMode: Boolean,
     feedSupplier: () -> T
 ) where T : RSSFeed {
 
     private val parser: XmlPullParser
     private val feed: T
     private val mode: ParsingMode = ParsingMode.Read()
+    private val namespaces: LinkedHashMap<String, String> = LinkedHashMap()
+    private val pullParserNSAware = strictMode
 
     init {
-        factory.isNamespaceAware = true
+        factory.isNamespaceAware = pullParserNSAware
         parser = factory.newPullParser()
         feed = feedSupplier()
     }
@@ -25,51 +33,46 @@ class ParserExecutor<T>(
      */
     fun run(): T {
         parser.setInput(input)
-        loopThrough(parser.eventType)
+        loopThrough()
         return feed
     }
 
-    private fun loopThrough(token: Int) {
+    private fun loopThrough() {
+        var token = parser.eventType
         while (token != XmlPullParser.END_DOCUMENT) {
             when (token) {
                 XmlPullParser.END_TAG -> closingTag()
                 XmlPullParser.START_TAG -> openingTag()
             }
-            parser.next()
+            token = parser.next()
         }
     }
 
-    /** deduce mode based on given name */
-    private fun deduceParsingMode(root: RSSFeed, prefix: String, localName: String): ParsingMode {
-        return when (prefix) {
-            ParseRSSKeyword.DEFAULT_NS ->
-                when (localName) {
-                    ParseRSSKeyword.CHANNEL -> ParsingMode.Channel(root)
-                    ParseRSSKeyword.ITEM -> ParsingMode.Item
-                    ParseRSSKeyword.IMAGE -> ParsingMode.Image
-                    ParseRSSKeyword.MEDIA_GROUP -> ParsingMode.MediaNS.Group
-                    else -> ParsingMode.Read()
-                }
-            ParseRSSKeyword.MEDIA_NS ->
-                when (prefix.buildRSSName(localName)) {
-                    ParseRSSKeyword.MEDIA_GROUP -> ParsingMode.MediaNS.Group
-                    else -> ParsingMode.Read()
-                }
-            else -> ParsingMode.Read()
+    private fun collectNS(element: ParseRSSElement): ParseRSSElement {
+        if (element.name != RSSVersion.RSS_V1.elementName && element.name != RSSVersion.RSS_V2.elementName) {
+            return element
         }
+        val attrCount = parser.attributeCount
+        for (i in 0 until attrCount) {
+            val attribute = parser.getRSSAttributeElement(i, pullParserNSAware)
+            namespaces[attribute.name] = attribute.value
+        }
+        return element
     }
 
     private fun openingTag() {
-        mode += deduceParsingMode(feed, parser.lowerCasePrefix(), parser.lowerCaseName())
-        when (parser.lowerCasePrefix()) {
+        var element = parser.getRSSElement(pullParserNSAware)
+        mode += ParserExecutorUtils.deduceParsingMode(feed, element)
+        element = collectNS(element)
+        when (element.prefix) {
             ParseRSSKeyword.MEDIA_NS -> parseNSMedia()
             else -> parseNSDefault()
         }
     }
 
     private fun closingTag() {
-        when (parser.lowerCaseName()) {
-            ParseRSSKeyword.MEDIA_GROUP -> {
+        when (parser.getRSSElement(pullParserNSAware).name) {
+            ParseRSSKeyword.GROUP -> {
                 mode -= ParsingMode.MediaNS.Group
             }
             ParseRSSKeyword.IMAGE -> {
@@ -84,7 +87,7 @@ class ParserExecutor<T>(
     }
 
     private fun parseNSDefault() {
-        when (parser.lowerCaseName()) {
+        when (parser.getRSSElement(pullParserNSAware).name) {
             ParseRSSKeyword.TITLE -> mode[TitleEnabledObject::class.java] = {
                 it?.title = parser.nextTextTrimmed()
             }
@@ -122,8 +125,8 @@ class ParserExecutor<T>(
     }
 
     private fun parseNSMedia() {
-        when (parser.lowerCasePrefix().buildRSSName(parser.lowerCaseName())) {
-            ParseRSSKeyword.MEDIA_CONTENT -> mode[MediaEnabledObject::class.java] = {
+        when (parser.getRSSElement(pullParserNSAware).name) {
+            ParseRSSKeyword.CONTENT -> mode[MediaEnabledObject::class.java] = {
                 val media = RSSMediaObject()
                 media.url = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
                 media.medium = MediaType.from(
@@ -135,12 +138,12 @@ class ParserExecutor<T>(
                     parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HEIGHT).toInt()
                 it?.media?.add(media)
             }
-            ParseRSSKeyword.MEDIA_DESC -> mode[MediaEnabledObject::class.java] = {
+            ParseRSSKeyword.DESCRIPTION -> mode[MediaEnabledObject::class.java] = {
                 it?.apply {
                     media.lastOrNull()?.description = parser.nextTextTrimmed()
                 }
             }
-            ParseRSSKeyword.MEDIA_CREDIT -> mode[MediaEnabledObject::class.java] = {
+            ParseRSSKeyword.CREDIT -> mode[MediaEnabledObject::class.java] = {
                 it?.apply {
                     media.lastOrNull()?.credit = parser.nextTextTrimmed()
                 }

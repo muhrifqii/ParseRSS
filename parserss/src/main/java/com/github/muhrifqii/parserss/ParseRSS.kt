@@ -35,7 +35,7 @@ object ParseRSS : ParseRSSOperation {
     @Suppress("UNCHECKED_CAST")
     @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
     override fun <R : RSSFeed> parse(xml: Reader): R {
-        return parse(xml) {
+        return parse(xml, false) {
             RSSFeedObject()
         } as R
     }
@@ -46,15 +46,18 @@ object ParseRSS : ParseRSSOperation {
     @Suppress("UNCHECKED_CAST")
     @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
     override fun <R : RSSFeed> parse(xml: String): R {
-        return parse(StringReader(xml)) {
+        return parse(StringReader(xml), false) {
             RSSFeedObject()
         } as R
     }
 
-    override fun <T : RSSFeed> parse(xml: Reader, feedSupplier: () -> T): T {
+    /**
+     * Parse RSS customizable
+     */
+    override fun <T : RSSFeed> parse(xml: Reader, strictlyNamespaceChecking: Boolean, feedSupplier: () -> T): T {
         val unwrappedFactory =
             factory ?: throw ParseRSSException("xmlPullParserFactory is null. Should call ParseRSS.init() once.")
-        return ParserExecutor(unwrappedFactory, xml, feedSupplier)
+        return ParserExecutor(unwrappedFactory, xml, strictlyNamespaceChecking, feedSupplier)
             .run()
     }
 }

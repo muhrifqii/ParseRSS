@@ -51,6 +51,7 @@ interface RSSFeed :
     LinkEnabledObject,
     PublishDateEnabledObject,
     LangEnabledObject {
+    var version: RSSVersion
     var image: RSSImage?
     var items: MutableList<RSSItem>
 }
