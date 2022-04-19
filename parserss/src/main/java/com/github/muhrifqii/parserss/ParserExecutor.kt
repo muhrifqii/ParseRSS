@@ -100,6 +100,9 @@ class ParserExecutor<T>(
             ParseRSSKeyword.PUBLISH_DATE -> mode[PublishDateEnabledObject::class.java] = {
                 it?.publishDate = parser.nextTextTrimmed()
             }
+            ParseRSSKeyword.LAST_BUILD_DATE -> mode[RSSFeed::class.java] = {
+                it?.lastBuildDate = parser.nextTextTrimmed()
+            }
             ParseRSSKeyword.URL -> mode[UrlEnabledObject::class.java] = {
                 it?.url = parser.nextTextTrimmed()
             }
@@ -120,6 +123,12 @@ class ParserExecutor<T>(
                 it?.category?.add(
                     RSSCategoryObject(domain, parser.nextTextTrimmed())
                 )
+            }
+            ParseRSSKeyword.COPYRIGHT -> mode[CopyrightsEnabledObject::class.java] = {
+                it?.copyright = parser.nextTextTrimmed()
+            }
+            ParseRSSKeyword.RIGHTS -> mode[CopyrightsEnabledObject::class.java] = {
+                it?.rights = parser.nextTextTrimmed()
             }
         }
     }

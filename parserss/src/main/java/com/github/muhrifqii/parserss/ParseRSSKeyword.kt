@@ -5,6 +5,7 @@ internal object ParseRSSKeyword {
     const val DEFAULT_NS = ""
     const val MEDIA_NS = "media"
     const val RDF_NS = "rdf"
+    const val DC_NS = "dc"
 
     const val CHANNEL = "channel"
     const val ITEM = "item"
@@ -19,6 +20,7 @@ internal object ParseRSSKeyword {
     const val CATEGORY = "category"
     const val AUTHOR = "author"
     const val COPYRIGHT = "copyright"
+    const val RIGHTS = "rights"
     const val LAST_BUILD_DATE = "lastbuilddate"
     const val GROUP = "group"
     const val CONTENT = "content"

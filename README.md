@@ -29,15 +29,17 @@ article:
 
 - RSS Version based on https://validator.w3.org/feed/docs/
   - [ ] [Atom](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc4287.html)
-  - [ ] [RSS V1](https://validator.w3.org/feed/docs/rss1.html#s5.2)
+  - [x] [RSS V1](https://validator.w3.org/feed/docs/rss1.html#s5.2)
   - [x] [RSS V0.91](https://www.rssboard.org/rss-specification)
   - [x] [RSS V0.92](https://www.rssboard.org/rss-specification)
   - [x] [RSS V2](https://www.rssboard.org/rss-specification)
-  - [ ] Specific Version Handling
+  - [x] Specific Version Handling
 - RSS Namespace Checking
   - [ ] Atom
   - [ ] DC
-  - [ ] Media
+  - [x] Media
+  - [x] RDF
+  - [ ] SY
   - [ ] Specific namespaces
 - Channel
   - [x] Title `<title>`
@@ -46,8 +48,9 @@ article:
   - [x] Publication Date `<pubDate>`
   - [x] Image `<image>`
   - [x] Language `<language>`
-  - [ ] Copyright `<copyright>`
-  - [ ] Last Build Date `<lastBuildDate>`
+  - [x] Copyright `<copyright>`
+  - [x] Rights `<rights>`
+  - [x] Last Build Date `<lastBuildDate>`
   - [ ] Atom Link `<atom:link>`
   - [ ] TimeToLive `<ttl>`
   - [ ] SkipHours `<skipHours>`
@@ -69,7 +72,7 @@ article:
   - [ ] Enclosure `<enclosure>`
   - [ ] Atom Link `<atom:link>`
   - [ ] DC Creator _(NYT)_ `<dc:creator>`
-  - [ ] Comments `<comments>`
+  - [x] Comments `<comments>`
 
 `ParseRSS` mainly has two main objects. `RSSFeedObject` and `RSSItemObject`. You can create your own parsing strategy by
 implementing `RSSFeed` and `RSSItem`.

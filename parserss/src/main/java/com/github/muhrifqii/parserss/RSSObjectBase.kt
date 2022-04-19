@@ -44,15 +44,26 @@ interface MediaEnabledObject : RSSObject {
     var media: MutableList<RSSMedia>
 }
 
+interface CommentEnabledObject : RSSObject {
+    var comments: String?
+}
+
+interface CopyrightsEnabledObject : RSSObject {
+    var copyright: String?
+    var rights: String?
+}
+
 interface RSSFeed :
     RSSObject,
     TitleEnabledObject,
     DescriptionEnabledObject,
     LinkEnabledObject,
     PublishDateEnabledObject,
-    LangEnabledObject {
+    LangEnabledObject,
+    CopyrightsEnabledObject {
     var version: RSSVersion
     var image: RSSImage?
+    var lastBuildDate: String?
     var items: MutableList<RSSItem>
 }
 
@@ -65,7 +76,8 @@ interface RSSItem :
     AuthorEnabledObject,
     CategoryEnabledObject,
     GUIdEnabledObject,
-    MediaEnabledObject
+    MediaEnabledObject,
+    CommentEnabledObject
 
 interface RSSImage :
     RSSObject,

@@ -6,8 +6,11 @@ data class RSSFeedObject(
     override var description: String? = null,
     override var link: String? = null,
     override var publishDate: String? = null,
+    override var lastBuildDate: String? = null,
     override var language: String? = null,
     override var image: RSSImage? = null,
+    override var copyright: String? = null,
+    override var rights: String? = null,
     override var items: MutableList<RSSItem> = mutableListOf()
 ) : RSSFeed
 
@@ -19,7 +22,8 @@ data class RSSItemObject(
     override var guId: GUId? = null,
     override var media: MutableList<RSSMedia> = mutableListOf(),
     override var author: String? = null,
-    override var category: MutableList<RSSCategory> = mutableListOf()
+    override var category: MutableList<RSSCategory> = mutableListOf(),
+    override var comments: String? = null
 ) : RSSItem
 
 data class RSSImageObject(
@@ -27,10 +31,6 @@ data class RSSImageObject(
     override var link: String? = null,
     override var title: String? = null
 ) : RSSImage
-
-data class RSSMediaGroupObject(
-    override var media: MutableList<RSSMedia> = mutableListOf()
-) : MediaEnabledObject
 
 data class RSSMediaObject(
     override var medium: MediaType = MediaType.Unspecified,
