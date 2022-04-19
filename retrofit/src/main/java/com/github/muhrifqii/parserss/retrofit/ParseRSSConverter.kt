@@ -7,24 +7,28 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
 
-internal class ParseRSSConverter<R: RSSFeed>() : Converter<ResponseBody, R> {
-    override fun convert(value: ResponseBody): R? {
+internal class ParseRSSConverter<R : RSSFeed>() : Converter<ResponseBody, R> {
+    override fun convert(value: ResponseBody): R {
         return ParseRSS.parse(value.charStream())
     }
 }
 
-class ParseRSSConverterFactory<R: RSSFeed> private constructor() : Converter.Factory() {
+/** Creates [Converter] instances based on a type and target usage. */
+class ParseRSSConverterFactory<R : RSSFeed> private constructor() : Converter.Factory() {
 
     override fun responseBodyConverter(
         type: Type,
         annotations: Array<Annotation>,
         retrofit: Retrofit
-    ): Converter<ResponseBody, *>? {
+    ): Converter<ResponseBody, *> {
 
         return ParseRSSConverter<R>()
     }
 
     companion object {
-        fun <R: RSSFeed> create() = ParseRSSConverterFactory<R>()
+        /**
+         * create [ParseRSS] converter factory
+         */
+        fun <R : RSSFeed> create() = ParseRSSConverterFactory<R>()
     }
 }

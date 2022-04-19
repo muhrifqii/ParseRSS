@@ -1,35 +1,36 @@
 package com.github.muhrifqii.parserss
 
 import com.github.muhrifqii.parserss.samples.Feed
+import com.github.muhrifqii.parserss.utils.toPrefixNamedElement
 import com.google.common.truth.Truth.assertThat
-import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
-import org.xmlpull.v1.XmlPullParserFactory
 import java.io.StringReader
 
-class ParseTest {
-    companion object {
-        @BeforeClass
-        @JvmStatic
-        fun configureClass() {
-            ParseRSS.init(XmlPullParserFactory.newInstance())
-        }
-    }
+class ParseTest : AbstractTest() {
 
-    lateinit var feed: RSSFeedObject
+    private lateinit var feed: RSSFeedObject
     private val xml = Feed.rssV2EnUS
 
-    @Before
-    fun configure() {
+    override fun configure() {
         feed = ParseRSS.parse(xml)
     }
 
     @Test
+    fun rssNamePrefixedCheck() {
+        assertThat("item".toPrefixNamedElement().prefix).isEmpty()
+        assertThat("item".toPrefixNamedElement().name).isEqualTo("item")
+        assertThat("xmlns:rdf".toPrefixNamedElement().prefix).isEqualTo("xmlns")
+        assertThat("xmlns:rdf".toPrefixNamedElement().name).isEqualTo("rdf")
+    }
+
+    @Test
     fun validRSSFeedReader() {
-        val reader = StringReader(xml)
-        val feed: RSSFeedObject = ParseRSS.parse(reader)
-        assertThat(feed.title).matches("AAAA - RSS Channel - International Edition")
+        val feed1 = ParseRSS.parse(StringReader(xml), false) {
+            RSSFeedObject()
+        }
+        val feed2: RSSFeedObject = ParseRSS.parse(StringReader(xml))
+        assertThat(feed1.title).matches("AAAA - RSS Channel - International Edition")
+        assertThat(feed2.title).matches("AAAA - RSS Channel - International Edition")
     }
 
     @Test
@@ -38,7 +39,7 @@ class ParseTest {
         assertThat(feed.link).matches("https://dp3ap2.jogjaprov.go.id/")
         assertThat(feed.publishDate).isNull()
         assertThat(feed.image).isNotNull()
-        assertThat(feed.image!!.imageUrl).matches("https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png")
+        assertThat(feed.image!!.url).matches("https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png")
         assertThat(feed.language).matches("en-us")
         assertThat(feed.items).hasSize(2)
     }

@@ -1,27 +1,23 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-buildscript {
-    ext.kotlin_version = '1.3.41'
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
-    }
+plugins {
+    id 'com.android.application' version "${agp_version}" apply false
+    id 'com.android.library' version "${agp_version}" apply false
+    id 'org.jetbrains.kotlin.android' version "${kotlin_version}" apply false
+    id "io.gitlab.arturbosch.detekt" version "1.20.0-RC2"
+    id "com.diffplug.spotless" version "6.4.1" apply false
 }
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
-        mavenCentral()
-    }
-}
+apply from: 'root-reportings.gradle'
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config = files("$projectDir/detekt-config.yml")
+    parallel = true
+}
+
+dependencies {
+    detektPlugins('io.gitlab.arturbosch.detekt:detekt-formatting:1.20.0-RC2')
 }
