@@ -2,16 +2,22 @@ package com.github.muhrifqii.parserss.sample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.kittinunf.fuel.Fuel
 import com.github.muhrifqii.parserss.RSSFeedObject
 import com.github.muhrifqii.parserss.fuel.responseRss
 
-import kotlinx.android.synthetic.main.activity_main.*
-
 class MainActivity : AppCompatActivity() {
 
     var adapter = RVAdapter(listOf())
+    private val toolbar by lazy {
+        findViewById<Toolbar>(R.id.toolbar)
+    }
+    private val recyclerView by lazy {
+        findViewById<RecyclerView>(R.id.recyclerView)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
