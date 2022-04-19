@@ -10,4 +10,4 @@ jobs:
           java-version: 11
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: lint test
+          arguments: testDebugUnitTest debugCoverage allDebugCoverage
