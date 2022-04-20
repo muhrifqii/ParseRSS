@@ -1,6 +1,11 @@
 package com.github.muhrifqii.parserss.fuel
 
-import com.github.kittinunf.fuel.core.*
+import com.github.kittinunf.fuel.core.Request
+import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.github.kittinunf.fuel.core.ResponseHandler
+import com.github.kittinunf.fuel.core.ResponseResultHandler
+import com.github.kittinunf.fuel.core.ResultHandler
+import com.github.kittinunf.fuel.core.response
 import com.github.muhrifqii.parserss.ParseRSS
 import com.github.muhrifqii.parserss.RSSFeed
 import java.io.Reader

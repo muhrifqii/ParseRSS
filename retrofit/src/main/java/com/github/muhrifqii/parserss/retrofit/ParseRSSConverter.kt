@@ -7,7 +7,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
 
-internal class ParseRSSConverter<R : RSSFeed>() : Converter<ResponseBody, R> {
+internal class ParseRSSConverter<R : RSSFeed> : Converter<ResponseBody, R> {
     override fun convert(value: ResponseBody): R {
         return ParseRSS.parse(value.charStream())
     }

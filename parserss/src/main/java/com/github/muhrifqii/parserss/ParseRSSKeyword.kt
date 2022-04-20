@@ -49,6 +49,9 @@ enum class RSSVersion(val elementName: String) {
     }
 
     companion object {
+        /**
+         * Deduce version based from rss element
+         */
         fun valueOfElement(elementName: String): RSSVersion {
             return when (elementName) {
                 RSS_V1.elementName -> RSS_V1

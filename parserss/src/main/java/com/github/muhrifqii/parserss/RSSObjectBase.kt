@@ -108,6 +108,9 @@ enum class MediaType(private val rawValue: String) {
     }
 
     companion object {
+        /**
+         * Returns [MediaType] based on the [rawValue]
+         */
         fun from(rawValue: String): MediaType {
             return when (rawValue) {
                 "image" -> Image

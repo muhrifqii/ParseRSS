@@ -11,22 +11,23 @@ comments:
   active: true
   UndocumentedPublicClass:
     active: false
-    excludes: &testDirs
+    excludes: &excludedDirs
       - '**/test/**'
       - '**/androidTest/**'
+      - '**/sample/**'
     searchInNestedClass: true
     searchInInnerClass: true
     searchInInnerObject: true
     searchInInnerInterface: true
   UndocumentedPublicFunction:
     active: true
-    exclude: *testDirs
+    excludes: *excludedDirs
   UndocumentedPublicProperty:
     active: false
 complexity:
   TooManyFunctions:
     active: true
-    exclude: *testDirs
+    excludes: *excludedDirs
     thresholdInFiles: 11
     thresholdInClasses: 11
     thresholdInInterfaces: 11
@@ -80,7 +81,7 @@ style:
   active: true
   MaxLineLength:
     active: true
-    exclude: *testDirs
+    excludes: *excludedDirs
     maxLineLength: 120
     excludePackageStatements: true
     excludeImportStatements: true
@@ -90,3 +91,5 @@ style:
     max: 3
   PreferToOverPairSyntax:
     active: true
+formatting:
+  excludes: *excludedDirs

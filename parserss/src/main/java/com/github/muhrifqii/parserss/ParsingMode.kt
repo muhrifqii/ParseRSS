@@ -6,6 +6,9 @@ import com.github.muhrifqii.parserss.utils.lastValue
  * Base Parsing Mode Operation
  */
 sealed interface ParsingModeOperation {
+    /**
+     * Reset whatever the object it has
+     */
     fun resetObject()
 }
 
@@ -80,6 +83,9 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
 
         private val modes: LinkedHashMap<String, ParsingModeOperation> = LinkedHashMap()
 
+        /**
+         * Add/replace mode to the stack of the reader mode
+         */
         operator fun plusAssign(other: ParsingMode) {
             when (other) {
                 is Read -> return
@@ -95,6 +101,9 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
             }
         }
 
+        /**
+         * Remove mode from the stack of the reader mode
+         */
         operator fun minusAssign(other: ParsingMode) {
             when (other) {
                 is Read -> return
@@ -105,6 +114,9 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
             }
         }
 
+        /**
+         * Set the last mode's rss mutable object on the stack using a setter function and a class to cast to for a concrete setter
+         */
         operator fun <T : RSSObject> set(clazz: Class<T>, valueSetter: (T?) -> Unit) {
             try {
                 when (val mode = modes.lastValue()) {
@@ -126,6 +138,9 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
     }
 }
 
+/**
+ * Add more mode to the current mode. Only useful for [ParsingMode.Read] mode
+ */
 operator fun ParsingMode.plusAssign(other: ParsingMode) {
     when (this) {
         is ParsingMode.Read -> {
@@ -135,6 +150,9 @@ operator fun ParsingMode.plusAssign(other: ParsingMode) {
     }
 }
 
+/**
+ * Remove any mode to the current mode. Only useful for [ParsingMode.Read] mode
+ */
 operator fun ParsingMode.minusAssign(other: ParsingMode) {
     when (this) {
         is ParsingMode.Read -> {
@@ -144,6 +162,9 @@ operator fun ParsingMode.minusAssign(other: ParsingMode) {
     }
 }
 
+/**
+ * Set a mutable setter to a mode. Only useful for [ParsingMode.Read] mode
+ */
 operator fun <T : RSSObject> ParsingMode.set(field: Class<T>, valueSetter: (T?) -> Unit) {
     when (this) {
         is ParsingMode.Read -> {
