@@ -12,3 +12,6 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: detekt testDebugUnitTest debugCoverage allDebugCoverage
+      - uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: build/reports/detekt/detekt.sarif
