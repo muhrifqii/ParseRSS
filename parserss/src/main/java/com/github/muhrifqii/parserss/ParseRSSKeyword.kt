@@ -42,7 +42,7 @@ internal object ParseRSSKeyword {
 }
 
 enum class RSSVersion(val elementName: String) {
-    TBD(""), RSS_V1("rdf"), RSS_V2("rss");
+    TBD(""), RSS_V1("rdf"), RSS_V2("rss"), RSS_ATOM("feed");
 
     override fun toString(): String {
         return "$name(elementName='$elementName')"

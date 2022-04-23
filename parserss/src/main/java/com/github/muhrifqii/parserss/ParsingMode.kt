@@ -19,6 +19,7 @@ internal fun ParsingModeOperation.version(): RSSVersion {
     return when (this) {
         is RootDocument.RSS -> RSSVersion.RSS_V2
         is RootDocument.RDF -> RSSVersion.RSS_V1
+        is RootDocument.Atom -> RSSVersion.RSS_ATOM
         else -> RSSVersion.TBD
     }
 }
@@ -35,16 +36,17 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
     /**
      * Place to storing the rss feed
      */
-    data class Channel(val rssObject: RSSFeed, val isToC: Boolean) : ParsingMode(ParseRSSKeyword.CHANNEL)
+    class Channel(val rssObject: RSSFeed, val isToC: Boolean) : ParsingMode(ParseRSSKeyword.CHANNEL)
 
     /**
      * Item mode to parse an item element
      */
-    object Item : ParsingMode(ParseRSSKeyword.ITEM) {
+    class Item(private val cleanupFn: ((RSSItem) -> Unit)? = null) : ParsingMode(ParseRSSKeyword.ITEM) {
         var rssObject: RSSItem = RSSItemObject()
             private set
 
         override fun resetObject() {
+            cleanupFn?.invoke(rssObject)
             rssObject = RSSItemObject()
         }
     }
@@ -52,11 +54,12 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
     /**
      * Image mode to parse an image object
      */
-    object Image : ParsingMode(ParseRSSKeyword.IMAGE) {
+    class Image(private val cleanupFn: ((RSSImage) -> Unit)? = null) : ParsingMode(ParseRSSKeyword.IMAGE) {
         var rssObject: RSSImage = RSSImageObject()
             private set
 
         override fun resetObject() {
+            cleanupFn?.invoke(rssObject)
             rssObject = RSSImageObject()
         }
     }
@@ -66,13 +69,9 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
      */
     sealed interface MediaNS {
 
-        object Group : ParsingMode(ParseRSSKeyword.GROUP), MediaNS {
-            var rssObject: MediaEnabledObject = Item.rssObject
-                private set
-
-            override fun resetObject() {
-                rssObject = Item.rssObject
-            }
+        class Group : ParsingMode(ParseRSSKeyword.GROUP), MediaNS {
+            var rssObject: MediaEnabledObject = RSSItemObject()
+                internal set
         }
     }
 
@@ -89,13 +88,19 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
         operator fun plusAssign(other: ParsingMode) {
             when (other) {
                 is Read -> return
+                is MediaNS.Group -> {
+                    val item = modes.lastValue()
+                    if (item !is Item) throw ParseRSSException(
+                        "Error ${other.nameToken} should be under the item element",
+                    )
+                    other.rssObject = item.rssObject
+                }
                 is Channel -> {
                     val rootVersion = modes[RootDocument.token] ?: throw ParseRSSException("RSS not supported")
                     other.rssObject.version = rootVersion.version()
                     modes[other.nameToken] = other
                 }
                 else -> {
-                    other.resetObject()
                     modes[other.nameToken] = other
                 }
             }
@@ -108,7 +113,7 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
             when (other) {
                 is Read -> return
                 else -> {
-                    other.resetObject()
+                    modes[other.nameToken]?.resetObject()
                     modes.remove(other.nameToken)
                 }
             }
@@ -127,6 +132,7 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
                     is Channel -> valueSetter(clazz.cast(mode.rssObject))
                     RootDocument.RDF -> {}
                     RootDocument.RSS -> {}
+                    RootDocument.Atom -> {}
                 }
             } catch (err: ClassCastException) {
                 throw ParseRSSException(
@@ -134,6 +140,33 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
                     err
                 )
             }
+        }
+
+        /**
+         * Get the last rss mode's object
+         */
+        operator fun <T : RSSObject> ParsingMode.get(clazz: Class<T>): T? {
+            try {
+                return when (val mode = modes.lastValue()) {
+                    is MediaNS.Group -> clazz.cast(mode.rssObject)
+                    is Image -> clazz.cast(mode.rssObject)
+                    is Item -> clazz.cast(mode.rssObject)
+                    is Channel -> clazz.cast(mode.rssObject)
+                    else -> null
+                }
+            } catch (err: ClassCastException) {
+                throw ParseRSSException(
+                    "Error on casting rss object to ${clazz.name}",
+                    err
+                )
+            }
+        }
+
+        /**
+         * Check if current mode contains [other] mode
+         */
+        fun contains(other: ParsingMode): Boolean {
+            return modes.contains(other.nameToken)
         }
     }
 }
@@ -165,12 +198,34 @@ operator fun ParsingMode.minusAssign(other: ParsingMode) {
 /**
  * Set a mutable setter to a mode. Only useful for [ParsingMode.Read] mode
  */
-operator fun <T : RSSObject> ParsingMode.set(field: Class<T>, valueSetter: (T?) -> Unit) {
+operator fun <T : RSSObject> ParsingMode.set(clazz: Class<T>, valueSetter: (T?) -> Unit) {
     when (this) {
         is ParsingMode.Read -> {
-            this[field] = valueSetter
+            this[clazz] = valueSetter
         }
         else -> return
+    }
+}
+
+/**
+ * Get the last rss mode's object
+ */
+operator fun <T : RSSObject> ParsingMode.get(clazz: Class<T>): T? = when (this) {
+    is ParsingMode.Read -> {
+        this[clazz]
+    }
+    else -> null
+}
+
+/**
+ * Check if current mode contains [other] mode
+ */
+fun ParsingMode.contains(other: ParsingMode): Boolean {
+    return when (this) {
+        is ParsingMode.Read -> {
+            contains(other)
+        }
+        else -> false
     }
 }
 
@@ -188,4 +243,9 @@ sealed interface RootDocument : ParsingModeOperation {
      * Mode to parse root information for RDF type (v1)
      */
     object RDF : ParsingMode(token), RootDocument
+
+    /**
+     * Mode to parse root information for atom type
+     */
+    object Atom : ParsingMode(token), RootDocument
 }

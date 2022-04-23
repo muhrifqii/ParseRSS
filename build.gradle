@@ -14,7 +14,7 @@ task clean(type: Delete) {
 detekt {
     toolVersion = "1.19.0"
     buildUponDefaultConfig = true
-    config = files("$projectDir/detekt-config.yml")
+    config = files("$projectDir/detekt.yml")
     parallel = true
     setSource(files(projectDir))
     reports {

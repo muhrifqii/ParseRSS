@@ -64,30 +64,29 @@ class ParserExecutor<T>(
         var element = parser.getRSSElement(pullParserNSAware)
         mode += ParserExecutorUtils.deduceParsingMode(feed, element)
         element = collectNS(element)
-        when (element.prefix) {
-            ParseRSSKeyword.MEDIA_NS -> parseNSMedia()
-            else -> parseNSDefault()
+        if (mode.contains(RootDocument.Atom)) {
+            parseAtom(element)
+        } else {
+            parseV1V2(element)
         }
     }
 
     private fun closingTag() {
         when (parser.getRSSElement(pullParserNSAware).name) {
             ParseRSSKeyword.GROUP -> {
-                mode -= ParsingMode.MediaNS.Group
+                mode -= ParsingMode.MediaNS.Group()
             }
             ParseRSSKeyword.IMAGE -> {
-                feed.image = ParsingMode.Image.rssObject
-                mode -= ParsingMode.Image
+                mode -= ParsingMode.Image()
             }
             ParseRSSKeyword.ITEM -> {
-                feed.items.add(ParsingMode.Item.rssObject)
-                mode -= ParsingMode.Item
+                mode -= ParsingMode.Item()
             }
         }
     }
 
-    private fun parseNSDefault() {
-        when (parser.getRSSElement(pullParserNSAware).name) {
+    private fun parseNSDefault(element: ParseRSSElement) {
+        when (element.name) {
             ParseRSSKeyword.TITLE -> mode[TitleEnabledObject::class.java] = {
                 it?.title = parser.nextTextTrimmed()
             }
@@ -133,8 +132,8 @@ class ParserExecutor<T>(
         }
     }
 
-    private fun parseNSMedia() {
-        when (parser.getRSSElement(pullParserNSAware).name) {
+    private fun parseNSMedia(element: ParseRSSElement) {
+        when (element.name) {
             ParseRSSKeyword.CONTENT -> mode[MediaEnabledObject::class.java] = {
                 val media = RSSMediaObject()
                 media.url = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
@@ -157,6 +156,20 @@ class ParserExecutor<T>(
                     media.lastOrNull()?.credit = parser.nextTextTrimmed()
                 }
             }
+        }
+    }
+
+    private fun parseV1V2(element: ParseRSSElement) {
+        when (element.prefix) {
+            ParseRSSKeyword.MEDIA_NS -> parseNSMedia(element)
+            else -> parseNSDefault(element)
+        }
+    }
+
+    private fun parseAtom(element: ParseRSSElement) {
+        when (element.prefix) {
+            ParseRSSKeyword.MEDIA_NS -> parseNSMedia(element)
+            else -> parseNSDefault(element)
         }
     }
 }
