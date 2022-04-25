@@ -17,6 +17,11 @@ object ParserExecutorUtils {
         ParseRSSKeyword.IMAGE -> ParsingMode.Image {
             root.image = it
         }
+        RSSVersion.RSS_ATOM.elementName -> RootDocument.Atom + ParsingMode.Channel(root, false)
+        ParseRSSKeyword.ENTRY -> ParsingMode.Item {
+            root.items.add(it)
+        }
+        ParseRSSKeyword.AUTHOR -> ParsingMode.Author()
         else -> ParsingMode.Read()
     }
 

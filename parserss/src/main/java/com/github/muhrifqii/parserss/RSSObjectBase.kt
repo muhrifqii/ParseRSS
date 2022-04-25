@@ -29,7 +29,7 @@ interface LangEnabledObject : RSSObject {
 }
 
 interface AuthorEnabledObject : RSSObject {
-    var author: String?
+    var author: RSSPersonAware?
 }
 
 interface CategoryEnabledObject : RSSObject {
@@ -50,7 +50,14 @@ interface CommentEnabledObject : RSSObject {
 
 interface CopyrightsEnabledObject : RSSObject {
     var copyright: String?
-    var rights: String?
+}
+
+interface LastUpdatedEnabledObject : RSSObject {
+    var lastUpdated: String?
+}
+
+interface SummaryEnabledObject : RSSObject {
+    var summary: String?
 }
 
 interface RSSFeed :
@@ -60,10 +67,12 @@ interface RSSFeed :
     LinkEnabledObject,
     PublishDateEnabledObject,
     LangEnabledObject,
-    CopyrightsEnabledObject {
+    GUIdEnabledObject,
+    CopyrightsEnabledObject,
+    AuthorEnabledObject,
+    LastUpdatedEnabledObject {
     var version: RSSVersion
     var image: RSSImage?
-    var lastBuildDate: String?
     var items: MutableList<RSSItem>
 }
 
@@ -77,7 +86,9 @@ interface RSSItem :
     CategoryEnabledObject,
     GUIdEnabledObject,
     MediaEnabledObject,
-    CommentEnabledObject
+    CommentEnabledObject,
+    LastUpdatedEnabledObject,
+    SummaryEnabledObject
 
 interface RSSImage :
     RSSObject,
@@ -98,6 +109,12 @@ interface RSSMedia : RSSObject {
 interface RSSCategory : RSSObject {
     var domain: String?
     var name: String
+}
+
+interface RSSPersonAware : RSSObject {
+    var name: String
+    var uri: String?
+    var email: String?
 }
 
 enum class MediaType(private val rawValue: String) {
