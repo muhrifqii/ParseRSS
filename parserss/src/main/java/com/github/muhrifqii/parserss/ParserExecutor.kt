@@ -49,9 +49,10 @@ class ParserExecutor<T>(
     }
 
     private fun collectNS(element: ParseRSSElement): ParseRSSElement {
-        if (element.name != RSSVersion.RSS_V1.elementName && element.name != RSSVersion.RSS_V2.elementName) {
-            return element
-        }
+        if (element.name != RSSVersion.RSS_V1.elementName &&
+            element.name != RSSVersion.RSS_V2.elementName &&
+            element.name != RSSVersion.RSS_ATOM.elementName
+        ) return element
         val attrCount = parser.attributeCount
         for (i in 0 until attrCount) {
             val attribute = parser.getRSSAttributeElement(i, pullParserNSAware)
@@ -64,30 +65,35 @@ class ParserExecutor<T>(
         var element = parser.getRSSElement(pullParserNSAware)
         mode += ParserExecutorUtils.deduceParsingMode(feed, element)
         element = collectNS(element)
-        when (element.prefix) {
-            ParseRSSKeyword.MEDIA_NS -> parseNSMedia()
-            else -> parseNSDefault()
+        if (mode.contains(RootDocument.Atom)) {
+            parseAtom(element)
+        } else {
+            parseV1V2(element)
         }
     }
 
     private fun closingTag() {
         when (parser.getRSSElement(pullParserNSAware).name) {
             ParseRSSKeyword.GROUP -> {
-                mode -= ParsingMode.MediaNS.Group
+                mode -= ParsingMode.MediaNS.Group()
             }
             ParseRSSKeyword.IMAGE -> {
-                feed.image = ParsingMode.Image.rssObject
-                mode -= ParsingMode.Image
+                mode -= ParsingMode.Image()
             }
             ParseRSSKeyword.ITEM -> {
-                feed.items.add(ParsingMode.Item.rssObject)
-                mode -= ParsingMode.Item
+                mode -= ParsingMode.Item()
+            }
+            ParseRSSKeyword.ENTRY -> {
+                mode -= ParsingMode.Item()
+            }
+            ParseRSSKeyword.AUTHOR -> {
+                mode -= ParsingMode.Author()
             }
         }
     }
 
-    private fun parseNSDefault() {
-        when (parser.getRSSElement(pullParserNSAware).name) {
+    private fun parseNSDefault(element: ParseRSSElement) {
+        when (element.name) {
             ParseRSSKeyword.TITLE -> mode[TitleEnabledObject::class.java] = {
                 it?.title = parser.nextTextTrimmed()
             }
@@ -100,8 +106,8 @@ class ParserExecutor<T>(
             ParseRSSKeyword.PUBLISH_DATE -> mode[PublishDateEnabledObject::class.java] = {
                 it?.publishDate = parser.nextTextTrimmed()
             }
-            ParseRSSKeyword.LAST_BUILD_DATE -> mode[RSSFeed::class.java] = {
-                it?.lastBuildDate = parser.nextTextTrimmed()
+            ParseRSSKeyword.LAST_BUILD_DATE -> mode[LastUpdatedEnabledObject::class.java] = {
+                it?.lastUpdated = parser.nextTextTrimmed()
             }
             ParseRSSKeyword.URL -> mode[UrlEnabledObject::class.java] = {
                 it?.url = parser.nextTextTrimmed()
@@ -116,7 +122,7 @@ class ParserExecutor<T>(
                 it?.guId = GUId(parser.nextTextTrimmed(), isPerma)
             }
             ParseRSSKeyword.AUTHOR -> mode[AuthorEnabledObject::class.java] = {
-                it?.author = parser.nextTextTrimmed()
+                it?.author = RSSPersonAwareObject(parser.nextTextTrimmed())
             }
             ParseRSSKeyword.CATEGORY -> mode[CategoryEnabledObject::class.java] = {
                 val domain = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_DOMAIN)
@@ -127,14 +133,14 @@ class ParserExecutor<T>(
             ParseRSSKeyword.COPYRIGHT -> mode[CopyrightsEnabledObject::class.java] = {
                 it?.copyright = parser.nextTextTrimmed()
             }
-            ParseRSSKeyword.RIGHTS -> mode[CopyrightsEnabledObject::class.java] = {
-                it?.rights = parser.nextTextTrimmed()
+            ParseRSSKeyword.COMMENTS -> mode[CommentEnabledObject::class.java] = {
+                it?.comments = parser.nextTextTrimmed()
             }
         }
     }
 
-    private fun parseNSMedia() {
-        when (parser.getRSSElement(pullParserNSAware).name) {
+    private fun parseNSMedia(element: ParseRSSElement) {
+        when (element.name) {
             ParseRSSKeyword.CONTENT -> mode[MediaEnabledObject::class.java] = {
                 val media = RSSMediaObject()
                 media.url = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
@@ -157,6 +163,79 @@ class ParserExecutor<T>(
                     media.lastOrNull()?.credit = parser.nextTextTrimmed()
                 }
             }
+        }
+    }
+
+    private fun parseNSAtom(element: ParseRSSElement) {
+        when (element.name) {
+            ParseRSSKeyword.TITLE -> mode[TitleEnabledObject::class.java] = {
+                it?.title = parser.nextTextTrimmed()
+            }
+            ParseRSSKeyword.SUBTITLE -> mode[DescriptionEnabledObject::class.java] = {
+                it?.description = parser.nextTextTrimmed()
+            }
+            ParseRSSKeyword.PUBLISHED -> mode[PublishDateEnabledObject::class.java] = {
+                it?.publishDate = parser.nextTextTrimmed()
+            }
+            ParseRSSKeyword.ID -> mode[GUIdEnabledObject::class.java] = {
+                it?.guId = GUId(parser.nextTextTrimmed(), false)
+            }
+            ParseRSSKeyword.UPDATED -> mode[LastUpdatedEnabledObject::class.java] = {
+                it?.lastUpdated = parser.nextTextTrimmed()
+            }
+            ParseRSSKeyword.LINK -> mode[LinkEnabledObject::class.java] = {
+                val rel = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_REL) ?: ""
+                val href = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HREF)
+                if (rel == "self" && it is RSSFeed)
+                    it.link = href
+                else if (rel == "alternate" && it is RSSItem)
+                    it.link = href
+            }
+            ParseRSSKeyword.RIGHTS -> mode[CopyrightsEnabledObject::class.java] = {
+                it?.copyright = parser.nextTextTrimmed()
+            }
+            ParseRSSKeyword.SUMMARY -> mode[SummaryEnabledObject::class.java] = {
+                it?.summary = parser.nextTextTrimmed()
+            }
+        }
+        parseAtomPersonAwareObject(element)
+    }
+
+    private fun parseAtomPersonAwareObject(element: ParseRSSElement) {
+        when (element.name) {
+            ParseRSSKeyword.AUTHOR -> mode[AuthorEnabledObject::class.java] = {
+                it?.author = RSSPersonAwareObject("")
+            }
+            ParseRSSKeyword.NAME -> mode[AuthorEnabledObject::class.java] = {
+                it?.apply {
+                    author?.name = parser.nextTextTrimmed()
+                }
+            }
+            ParseRSSKeyword.URI -> mode[AuthorEnabledObject::class.java] = {
+                it?.apply {
+                    author?.uri = parser.nextTextTrimmed()
+                }
+            }
+            ParseRSSKeyword.EMAIL -> mode[AuthorEnabledObject::class.java] = {
+                it?.apply {
+                    author?.email = parser.nextTextTrimmed()
+                }
+            }
+        }
+    }
+
+    private fun parseV1V2(element: ParseRSSElement) {
+        when (element.prefix) {
+            ParseRSSKeyword.ATOM_NS -> parseAtom(element)
+            ParseRSSKeyword.MEDIA_NS -> parseNSMedia(element)
+            else -> parseNSDefault(element)
+        }
+    }
+
+    private fun parseAtom(element: ParseRSSElement) {
+        when (element.prefix) {
+            ParseRSSKeyword.MEDIA_NS -> parseNSMedia(element)
+            else -> parseNSAtom(element)
         }
     }
 }

@@ -53,7 +53,7 @@ class ParseTest : AbstractTest() {
         assertThat(item1.description).startsWith("Yogyakarta, BPPM- Anak adalah")
         assertThat(item1.media).hasSize(1)
         assertThat(item1.media[0].credit).matches("Leo Correa/Associated Press")
-        assertThat(item1.author).matches("John Doe")
+        assertThat(item1.author!!.name).matches("John Doe")
         assertThat(item1.category).hasSize(2)
         assertThat(item1.category[1].domain).matches("http://www.nytimes.com/namespaces/keywords/nyt_geo")
         val item2 = feed.items[1]

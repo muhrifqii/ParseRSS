@@ -29,7 +29,7 @@ interface LangEnabledObject : RSSObject {
 }
 
 interface AuthorEnabledObject : RSSObject {
-    var author: String?
+    var author: RSSPersonAware?
 }
 
 interface CategoryEnabledObject : RSSObject {
@@ -50,7 +50,14 @@ interface CommentEnabledObject : RSSObject {
 
 interface CopyrightsEnabledObject : RSSObject {
     var copyright: String?
-    var rights: String?
+}
+
+interface LastUpdatedEnabledObject : RSSObject {
+    var lastUpdated: String?
+}
+
+interface SummaryEnabledObject : RSSObject {
+    var summary: String?
 }
 
 interface RSSFeed :
@@ -60,10 +67,12 @@ interface RSSFeed :
     LinkEnabledObject,
     PublishDateEnabledObject,
     LangEnabledObject,
-    CopyrightsEnabledObject {
+    GUIdEnabledObject,
+    CopyrightsEnabledObject,
+    AuthorEnabledObject,
+    LastUpdatedEnabledObject {
     var version: RSSVersion
     var image: RSSImage?
-    var lastBuildDate: String?
     var items: MutableList<RSSItem>
 }
 
@@ -77,7 +86,9 @@ interface RSSItem :
     CategoryEnabledObject,
     GUIdEnabledObject,
     MediaEnabledObject,
-    CommentEnabledObject
+    CommentEnabledObject,
+    LastUpdatedEnabledObject,
+    SummaryEnabledObject
 
 interface RSSImage :
     RSSObject,
@@ -100,6 +111,12 @@ interface RSSCategory : RSSObject {
     var name: String
 }
 
+interface RSSPersonAware : RSSObject {
+    var name: String
+    var uri: String?
+    var email: String?
+}
+
 enum class MediaType(private val rawValue: String) {
     Image("image"), Video("video"), Unspecified("");
 
@@ -108,6 +125,9 @@ enum class MediaType(private val rawValue: String) {
     }
 
     companion object {
+        /**
+         * Returns [MediaType] based on the [rawValue]
+         */
         fun from(rawValue: String): MediaType {
             return when (rawValue) {
                 "image" -> Image

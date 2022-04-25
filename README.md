@@ -28,14 +28,14 @@ Simple, concise, and extensible RSS Parser in the entire coffee shop. It can cap
 article:
 
 - RSS Version based on https://validator.w3.org/feed/docs/
-  - [ ] [Atom](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc4287.html)
+  - [x] [Atom](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc4287.html)
   - [x] [RSS V1](https://validator.w3.org/feed/docs/rss1.html#s5.2)
   - [x] [RSS V0.91](https://www.rssboard.org/rss-specification)
   - [x] [RSS V0.92](https://www.rssboard.org/rss-specification)
   - [x] [RSS V2](https://www.rssboard.org/rss-specification)
   - [x] Specific Version Handling
 - RSS Namespace Checking
-  - [ ] Atom
+  - [x] Atom
   - [ ] DC
   - [x] Media
   - [x] RDF
@@ -51,7 +51,7 @@ article:
   - [x] Copyright `<copyright>`
   - [x] Rights `<rights>`
   - [x] Last Build Date `<lastBuildDate>`
-  - [ ] Atom Link `<atom:link>`
+  - [x] Atom Link `<atom:link>`
   - [ ] TimeToLive `<ttl>`
   - [ ] SkipHours `<skipHours>`
   - [ ] SkipDays `<skipDays>`
@@ -70,7 +70,7 @@ article:
   - [x] Categories `<category>`
   - [ ] Source `<source>`
   - [ ] Enclosure `<enclosure>`
-  - [ ] Atom Link `<atom:link>`
+  - [x] Atom Link `<atom:link>`
   - [ ] DC Creator _(NYT)_ `<dc:creator>`
   - [x] Comments `<comments>`
 

@@ -5,6 +5,7 @@ internal object ParseRSSKeyword {
     const val DEFAULT_NS = ""
     const val MEDIA_NS = "media"
     const val RDF_NS = "rdf"
+    const val ATOM_NS = "atom"
     const val DC_NS = "dc"
 
     const val CHANNEL = "channel"
@@ -27,11 +28,16 @@ internal object ParseRSSKeyword {
     const val CREDIT = "credit"
     const val COMMENTS = "comments"
 
-    const val FEED = "feed"
     const val ENTRY = "entry"
-
-    const val RDF_SEQ = "$RDF_NS:seq"
-    const val RDF_SEQ_LIST = "$RDF_NS:li"
+    const val SUBTITLE = "subtitle"
+    const val NAME = "name"
+    const val URI = "uri"
+    const val EMAIL = "email"
+    const val ID = "id"
+    const val UPDATED = "updated"
+    const val PUBLISHED = "published"
+    const val CONTRIBUTOR = "contributor"
+    const val SUMMARY = "summary"
 
     const val ATTR_PERMALINK = "isPermaLink"
     const val ATTR_DOMAIN = "domain"
@@ -39,22 +45,28 @@ internal object ParseRSSKeyword {
     const val ATTR_HEIGHT = "height"
     const val ATTR_WIDTH = "width"
     const val ATTR_URL = "url"
+    const val ATTR_URI = "uri"
+    const val ATTR_HREF = "href"
+    const val ATTR_REL = "rel"
 }
 
-enum class RSSVersion(val elementName: String) {
-    TBD(""), RSS_V1("rdf"), RSS_V2("rss");
+enum class RSSVersion(val elementName: String, val xmlns: String) {
+    TBD("", ""),
+    RSS_V1("rdf", "http://purl.org/rss/1.0/"),
+    RSS_V2("rss", ""),
+    RSS_ATOM("feed", "http://www.w3.org/2005/Atom");
 
-    override fun toString(): String {
-        return "$name(elementName='$elementName')"
-    }
+    override fun toString(): String = "RSSVersion(elementName='$elementName', xmlns='$xmlns')"
 
     companion object {
-        fun valueOfElement(elementName: String): RSSVersion {
-            return when (elementName) {
-                RSS_V1.elementName -> RSS_V1
-                RSS_V2.elementName -> RSS_V2
-                else -> throw IllegalArgumentException("$elementName is not a valid element")
-            }
+        /**
+         * Deduce version based from rss element
+         */
+        fun valueOfElement(elementName: String): RSSVersion = when (elementName) {
+            RSS_V1.elementName -> RSS_V1
+            RSS_V2.elementName -> RSS_V2
+            RSS_ATOM.elementName -> RSS_ATOM
+            else -> throw IllegalArgumentException("$elementName is not a valid element")
         }
     }
 }

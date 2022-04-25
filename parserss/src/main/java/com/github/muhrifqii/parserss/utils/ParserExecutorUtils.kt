@@ -11,8 +11,17 @@ object ParserExecutorUtils {
     private fun deduceDefaultNSParsingMode(root: RSSFeed, element: ParseRSSElement) = when (element.name) {
         RSSVersion.RSS_V2.elementName -> RootDocument.RSS
         ParseRSSKeyword.CHANNEL -> ParsingMode.Channel(root, false)
-        ParseRSSKeyword.ITEM -> ParsingMode.Item
-        ParseRSSKeyword.IMAGE -> ParsingMode.Image
+        ParseRSSKeyword.ITEM -> ParsingMode.Item {
+            root.items.add(it)
+        }
+        ParseRSSKeyword.IMAGE -> ParsingMode.Image {
+            root.image = it
+        }
+        RSSVersion.RSS_ATOM.elementName -> RootDocument.Atom + ParsingMode.Channel(root, false)
+        ParseRSSKeyword.ENTRY -> ParsingMode.Item {
+            root.items.add(it)
+        }
+        ParseRSSKeyword.AUTHOR -> ParsingMode.Author()
         else -> ParsingMode.Read()
     }
 
@@ -23,7 +32,7 @@ object ParserExecutorUtils {
     }
 
     private fun deduceMediaNSParsingMode(element: ParseRSSElement) = when (element.name) {
-        ParseRSSKeyword.GROUP -> ParsingMode.MediaNS.Group
+        ParseRSSKeyword.GROUP -> ParsingMode.MediaNS.Group()
         else -> ParsingMode.Read()
     }
 

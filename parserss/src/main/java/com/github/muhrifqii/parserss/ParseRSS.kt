@@ -16,9 +16,6 @@ object ParseRSS : ParseRSSOperation {
         factory = pullParserFactory
     }
 
-    /**
-     * Release Parser Factory
-     */
     override fun release() {
         factory = null
     }
@@ -29,9 +26,6 @@ object ParseRSS : ParseRSSOperation {
     @Deprecated("unused", ReplaceWith(""), DeprecationLevel.ERROR)
     override var applyRSSFeedConstructor: (() -> RSSFeed) = { RSSFeedObject() }
 
-    /**
-     * Parse RSS from Reader Object
-     */
     @Suppress("UNCHECKED_CAST")
     @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
     override fun <R : RSSFeed> parse(xml: Reader): R {
@@ -40,9 +34,6 @@ object ParseRSS : ParseRSSOperation {
         } as R
     }
 
-    /**
-     * Parse RSS from xml String
-     */
     @Suppress("UNCHECKED_CAST")
     @Throws(XmlPullParserException::class, IOException::class, ParseRSSException::class)
     override fun <R : RSSFeed> parse(xml: String): R {
@@ -51,9 +42,6 @@ object ParseRSS : ParseRSSOperation {
         } as R
     }
 
-    /**
-     * Parse RSS customizable
-     */
     override fun <T : RSSFeed> parse(xml: Reader, strictlyNamespaceChecking: Boolean, feedSupplier: () -> T): T {
         val unwrappedFactory =
             factory ?: throw ParseRSSException("xmlPullParserFactory is null. Should call ParseRSS.init() once.")

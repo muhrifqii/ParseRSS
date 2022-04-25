@@ -4,6 +4,10 @@ interface PrefixNamedHolder {
     val prefix: String
     val name: String
     val value: String
+
+    /**
+     * Check whether it contains namespace prefix or not
+     */
     fun hasNamespace(): Boolean = prefix.isNotEmpty()
 }
 
