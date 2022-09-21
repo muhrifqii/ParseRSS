@@ -104,7 +104,8 @@ class ParserExecutor<T>(
                 it?.link = parser.nextTextTrimmed()
             }
             ParseRSSKeyword.PUBLISH_DATE -> mode[PublishDateEnabledObject::class.java] = {
-                it?.publishDate = parser.nextTextTrimmed()
+                val date = parser.nextTextTrimmed()
+                if (date.isNotEmpty()) { it?.publishDate = date }
             }
             ParseRSSKeyword.LAST_BUILD_DATE -> mode[LastUpdatedEnabledObject::class.java] = {
                 it?.lastUpdated = parser.nextTextTrimmed()
@@ -116,25 +117,40 @@ class ParserExecutor<T>(
                 it?.language = parser.nextTextTrimmed()
             }
             ParseRSSKeyword.GUID -> mode[GUIdEnabledObject::class.java] = {
-                val isPerma =
-                    (parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_PERMALINK) ?: "true")
-                        .toBoolean()
-                it?.guId = GUId(parser.nextTextTrimmed(), isPerma)
+                val isPermanent = (
+                    parser.getAttributeValue(
+                        XmlPullParser.NO_NAMESPACE,
+                        ParseRSSKeyword.ATTR_PERMALINK
+                    ) ?: "true"
+                    ).toBoolean()
+                it?.guId = GUId(parser.nextTextTrimmed(), isPermanent)
             }
             ParseRSSKeyword.AUTHOR -> mode[AuthorEnabledObject::class.java] = {
                 it?.author = RSSPersonAwareObject(parser.nextTextTrimmed())
             }
             ParseRSSKeyword.CATEGORY -> mode[CategoryEnabledObject::class.java] = {
                 val domain = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_DOMAIN)
-                it?.category?.add(
-                    RSSCategoryObject(domain, parser.nextTextTrimmed())
-                )
+                it?.categories?.add(RSSCategoryObject(domain, parser.nextTextTrimmed()))
             }
             ParseRSSKeyword.COPYRIGHT -> mode[CopyrightsEnabledObject::class.java] = {
                 it?.copyright = parser.nextTextTrimmed()
             }
             ParseRSSKeyword.COMMENTS -> mode[CommentEnabledObject::class.java] = {
                 it?.comments = parser.nextTextTrimmed()
+            }
+            ParseRSSKeyword.ENCLOSURE -> mode[ImageUrlEnabledObject::class.java] = {
+                val imageUrl = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ENCLOSURE_URL)
+                it?.imageUrls?.add(imageUrl.trim())
+            }
+            ParseRSSKeyword.DC_NS_DATE -> mode[PublishDateEnabledObject::class.java] = {
+                val date = parser.nextTextTrimmed()
+                if (date.isNotEmpty()) {
+                    it?.publishDate = date
+                }
+            }
+            ParseRSSKeyword.DC_NS_TYPE -> mode[CategoryEnabledObject::class.java] = {
+                val domain = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_DOMAIN)
+                it?.categories?.add(RSSCategoryObject(domain, parser.nextTextTrimmed()))
             }
         }
     }
@@ -151,16 +167,16 @@ class ParserExecutor<T>(
                     parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_WIDTH).toInt()
                 media.height =
                     parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HEIGHT).toInt()
-                it?.media?.add(media)
+                it?.medias?.add(media)
             }
             ParseRSSKeyword.DESCRIPTION -> mode[MediaEnabledObject::class.java] = {
                 it?.apply {
-                    media.lastOrNull()?.description = parser.nextTextTrimmed()
+                    medias.lastOrNull()?.description = parser.nextTextTrimmed()
                 }
             }
             ParseRSSKeyword.CREDIT -> mode[MediaEnabledObject::class.java] = {
                 it?.apply {
-                    media.lastOrNull()?.credit = parser.nextTextTrimmed()
+                    medias.lastOrNull()?.credit = parser.nextTextTrimmed()
                 }
             }
         }
@@ -186,10 +202,11 @@ class ParserExecutor<T>(
             ParseRSSKeyword.LINK -> mode[LinkEnabledObject::class.java] = {
                 val rel = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_REL) ?: ""
                 val href = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HREF)
-                if (rel == "self" && it is RSSFeed)
+                if (rel == "self" && it is RSSFeed) {
                     it.link = href
-                else if (rel == "alternate" && it is RSSItem)
+                } else if (rel == "alternate" && it is RSSItem) {
                     it.link = href
+                }
             }
             ParseRSSKeyword.RIGHTS -> mode[CopyrightsEnabledObject::class.java] = {
                 it?.copyright = parser.nextTextTrimmed()

@@ -10,7 +10,7 @@ class MyApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // initalize ParseRSS with XMLPullParser
+        // initialize ParseRSS with XMLPullParser
         try {
             ParseRSS.init(XmlPullParserFactory.newInstance())
         } catch (e: XmlPullParserException) {
