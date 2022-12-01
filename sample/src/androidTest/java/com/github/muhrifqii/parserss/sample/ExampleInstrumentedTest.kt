@@ -34,7 +34,7 @@ class ExampleInstrumentedTest {
         ParseRSS.init(XmlPullParserFactory.newInstance())
 
         // Init params
-        val url = "https://www.comune.montecchio-emilia.re.it/api/news-in-primo-piano/RSS"
+        val url = "https://www.albipretori.it/Public/Rss?Codice=192"
         val baseUrl = "https://www.google.com/"
 
         // Init retrofit
