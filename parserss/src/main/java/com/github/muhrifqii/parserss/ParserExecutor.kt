@@ -179,16 +179,34 @@ class ParserExecutor<T>(
     private fun parseNSMedia(element: ParseRSSElement) {
         when (element.name) {
             ParseRSSKeyword.CONTENT -> mode[MediaEnabledObject::class.java] = {
-                val media = RSSMediaObject()
-                media.url = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
-                media.medium = MediaType.from(
-                    parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_MEDIUM),
-                )
-                media.width =
-                    parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_WIDTH).toInt()
-                media.height =
-                    parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HEIGHT).toInt()
-                it?.medias?.add(media)
+                try {
+                    val media = RSSMediaObject()
+                    media.url = parser.getAttributeValue(
+                        XmlPullParser.NO_NAMESPACE,
+                        ParseRSSKeyword.ATTR_URL
+                    )
+                    media.medium = MediaType.from(
+                        parser.getAttributeValue(
+                            XmlPullParser.NO_NAMESPACE,
+                            ParseRSSKeyword.ATTR_MEDIUM
+                        ),
+                    )
+                    media.width =
+                        parser.getAttributeValue(
+                            XmlPullParser.NO_NAMESPACE,
+                            ParseRSSKeyword.ATTR_WIDTH
+                        ).toInt()
+                    media.height =
+                        parser.getAttributeValue(
+                            XmlPullParser.NO_NAMESPACE,
+                            ParseRSSKeyword.ATTR_HEIGHT
+                        ).toInt()
+                    it?.medias?.add(media)
+                } catch (ignored: NumberFormatException) {
+                    if (BuildConfig.DEBUG) {
+                        println("[ParseRSS] Ignored NumberFormatException error: ${ignored.localizedMessage}")
+                    }
+                }
             }
             ParseRSSKeyword.DESCRIPTION -> mode[MediaEnabledObject::class.java] = {
                 it?.apply {
