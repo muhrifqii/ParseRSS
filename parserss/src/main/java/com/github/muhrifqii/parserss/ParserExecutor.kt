@@ -14,7 +14,7 @@ class ParserExecutor<T>(
     factory: XmlPullParserFactory,
     private val input: Reader,
     strictMode: Boolean,
-    feedSupplier: () -> T
+    feedSupplier: () -> T,
 ) where T : RSSFeed {
 
     private val parser: XmlPullParser
@@ -53,7 +53,9 @@ class ParserExecutor<T>(
         if (element.name != RSSVersion.RSS_V1.elementName &&
             element.name != RSSVersion.RSS_V2.elementName &&
             element.name != RSSVersion.RSS_ATOM.elementName
-        ) return element
+        ) {
+            return element
+        }
         val attrCount = parser.attributeCount
         for (i in 0 until attrCount) {
             val attribute = parser.getRSSAttributeElement(i, pullParserNSAware)
@@ -124,7 +126,7 @@ class ParserExecutor<T>(
                     val isPermanent = (
                         parser.getAttributeValue(
                             XmlPullParser.NO_NAMESPACE,
-                            ParseRSSKeyword.ATTR_PERMALINK
+                            ParseRSSKeyword.ATTR_PERMALINK,
                         ) ?: "true"
                         ).toBoolean()
                     it?.guId = GUId(parser.nextTextTrimmed(), isPermanent)
@@ -136,7 +138,7 @@ class ParserExecutor<T>(
                 ParseRSSKeyword.CATEGORY -> mode[CategoryEnabledObject::class.java] = {
                     val domain = parser.getAttributeValue(
                         XmlPullParser.NO_NAMESPACE,
-                        ParseRSSKeyword.ATTR_DOMAIN
+                        ParseRSSKeyword.ATTR_DOMAIN,
                     )
                     it?.categories?.add(RSSCategoryObject(domain, parser.nextTextTrimmed()))
                 }
@@ -149,7 +151,7 @@ class ParserExecutor<T>(
                 ParseRSSKeyword.ENCLOSURE -> mode[ImageUrlEnabledObject::class.java] = {
                     val imageUrl = parser.getAttributeValue(
                         XmlPullParser.NO_NAMESPACE,
-                        ParseRSSKeyword.ENCLOSURE_URL
+                        ParseRSSKeyword.ENCLOSURE_URL,
                     )
                     it?.imageUrls?.add(imageUrl.trim())
                 }
@@ -162,7 +164,7 @@ class ParserExecutor<T>(
                 ParseRSSKeyword.DC_NS_TYPE -> mode[CategoryEnabledObject::class.java] = {
                     val domain = parser.getAttributeValue(
                         XmlPullParser.NO_NAMESPACE,
-                        ParseRSSKeyword.ATTR_DOMAIN
+                        ParseRSSKeyword.ATTR_DOMAIN,
                     )
                     it?.categories?.add(RSSCategoryObject(domain, parser.nextTextTrimmed()))
                 }
@@ -170,7 +172,7 @@ class ParserExecutor<T>(
         } catch (ignored: XmlPullParserException) {
             // Note: added try/catch to handle RSS with broken and not valid structures, so we
             //      can continue the parsing instead of return a brutal exception
-            if (BuildConfig.DEBUG) { println("ignored XmlPullParserException here: $ignored") }
+            if (BuildConfig.DEBUG) { println("[ParseRSS] Ignored XmlPullParserException here: $ignored") }
         }
     }
 
@@ -180,7 +182,7 @@ class ParserExecutor<T>(
                 val media = RSSMediaObject()
                 media.url = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
                 media.medium = MediaType.from(
-                    parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_MEDIUM)
+                    parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_MEDIUM),
                 )
                 media.width =
                     parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_WIDTH).toInt()

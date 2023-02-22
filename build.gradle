@@ -17,12 +17,13 @@ detekt {
     config = files("$projectDir/detekt.yml")
     parallel = true
     setSource(files(projectDir))
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-        txt.required.set(false)
-        sarif.required.set(true)
-    }
+// DEPRECATED
+//    reports {
+//        xml.required.set(true)
+//        html.required.set(true)
+//        txt.required.set(false)
+//        sarif.required.set(true)
+//    }
 }
 
 dependencies {
