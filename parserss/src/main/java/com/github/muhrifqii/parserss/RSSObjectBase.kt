@@ -4,6 +4,10 @@ import java.io.Serializable
 
 interface RSSObject : Serializable
 
+interface ImageUrlEnabledObject : RSSObject {
+    var imageUrls: MutableList<String?>
+}
+
 interface TitleEnabledObject : RSSObject {
     var title: String?
 }
@@ -21,7 +25,7 @@ interface PublishDateEnabledObject : RSSObject {
 }
 
 interface UrlEnabledObject : RSSObject {
-    var url: String
+    var url: String?
 }
 
 interface LangEnabledObject : RSSObject {
@@ -33,7 +37,7 @@ interface AuthorEnabledObject : RSSObject {
 }
 
 interface CategoryEnabledObject : RSSObject {
-    var category: MutableList<RSSCategory>
+    var categories: MutableList<RSSCategory>
 }
 
 interface GUIdEnabledObject : RSSObject {
@@ -41,7 +45,7 @@ interface GUIdEnabledObject : RSSObject {
 }
 
 interface MediaEnabledObject : RSSObject {
-    var media: MutableList<RSSMedia>
+    var medias: MutableList<RSSMedia>
 }
 
 interface CommentEnabledObject : RSSObject {
@@ -88,7 +92,8 @@ interface RSSItem :
     MediaEnabledObject,
     CommentEnabledObject,
     LastUpdatedEnabledObject,
-    SummaryEnabledObject
+    SummaryEnabledObject,
+    ImageUrlEnabledObject
 
 interface RSSImage :
     RSSObject,

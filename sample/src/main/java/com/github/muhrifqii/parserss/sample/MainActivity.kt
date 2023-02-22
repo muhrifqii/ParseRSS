@@ -11,7 +11,7 @@ import com.github.muhrifqii.parserss.fuel.responseRss
 
 class MainActivity : AppCompatActivity() {
 
-    var adapter = RVAdapter(listOf())
+    private var adapter = RVAdapter(listOf())
     private val toolbar by lazy {
         findViewById<Toolbar>(R.id.toolbar)
     }
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         loadFeedUsingFuel()
     }
 
-    fun loadFeedUsingFuel() {
+    private fun loadFeedUsingFuel() {
         Fuel.get("http://dp3ap2.jogjaprov.go.id/rss")
             .responseRss<RSSFeedObject> { result ->
                 result.fold({

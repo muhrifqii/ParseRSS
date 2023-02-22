@@ -6,6 +6,7 @@ import com.github.muhrifqii.parserss.utils.getRSSAttributeElement
 import com.github.muhrifqii.parserss.utils.getRSSElement
 import com.github.muhrifqii.parserss.utils.nextTextTrimmed
 import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.Reader
 
@@ -13,7 +14,7 @@ class ParserExecutor<T>(
     factory: XmlPullParserFactory,
     private val input: Reader,
     strictMode: Boolean,
-    feedSupplier: () -> T
+    feedSupplier: () -> T,
 ) where T : RSSFeed {
 
     private val parser: XmlPullParser
@@ -52,7 +53,9 @@ class ParserExecutor<T>(
         if (element.name != RSSVersion.RSS_V1.elementName &&
             element.name != RSSVersion.RSS_V2.elementName &&
             element.name != RSSVersion.RSS_ATOM.elementName
-        ) return element
+        ) {
+            return element
+        }
         val attrCount = parser.attributeCount
         for (i in 0 until attrCount) {
             val attribute = parser.getRSSAttributeElement(i, pullParserNSAware)
@@ -93,74 +96,134 @@ class ParserExecutor<T>(
     }
 
     private fun parseNSDefault(element: ParseRSSElement) {
-        when (element.name) {
-            ParseRSSKeyword.TITLE -> mode[TitleEnabledObject::class.java] = {
-                it?.title = parser.nextTextTrimmed()
+        try {
+            when (element.name) {
+                ParseRSSKeyword.TITLE -> mode[TitleEnabledObject::class.java] = {
+                    it?.title = parser.nextTextTrimmed()
+                }
+                ParseRSSKeyword.DESCRIPTION -> mode[DescriptionEnabledObject::class.java] = {
+                    it?.description = parser.nextTextTrimmed()
+                }
+                ParseRSSKeyword.LINK -> mode[LinkEnabledObject::class.java] = {
+                    it?.link = parser.nextTextTrimmed()
+                }
+                ParseRSSKeyword.PUBLISH_DATE -> mode[PublishDateEnabledObject::class.java] = {
+                    val date = parser.nextTextTrimmed()
+                    if (date.isNotEmpty()) {
+                        it?.publishDate = date
+                    }
+                }
+                ParseRSSKeyword.LAST_BUILD_DATE -> mode[LastUpdatedEnabledObject::class.java] = {
+                    it?.lastUpdated = parser.nextTextTrimmed()
+                }
+                ParseRSSKeyword.URL -> mode[UrlEnabledObject::class.java] = {
+                    it?.url = parser.nextTextTrimmed()
+                }
+                ParseRSSKeyword.LANG -> mode[LangEnabledObject::class.java] = {
+                    it?.language = parser.nextTextTrimmed()
+                }
+                ParseRSSKeyword.GUID -> mode[GUIdEnabledObject::class.java] = {
+                    val isPermanent = (
+                        parser.getAttributeValue(
+                            XmlPullParser.NO_NAMESPACE,
+                            ParseRSSKeyword.ATTR_PERMALINK,
+                        ) ?: "true"
+                        ).toBoolean()
+                    it?.guId = GUId(parser.nextTextTrimmed(), isPermanent)
+                }
+                ParseRSSKeyword.AUTHOR -> mode[AuthorEnabledObject::class.java] = {
+                    val parsed = parser.nextTextTrimmed()
+                    it?.author = RSSPersonAwareObject(parsed)
+                }
+                ParseRSSKeyword.CATEGORY -> mode[CategoryEnabledObject::class.java] = {
+                    val domain = parser.getAttributeValue(
+                        XmlPullParser.NO_NAMESPACE,
+                        ParseRSSKeyword.ATTR_DOMAIN,
+                    )
+                    it?.categories?.add(RSSCategoryObject(domain, parser.nextTextTrimmed()))
+                }
+                ParseRSSKeyword.COPYRIGHT -> mode[CopyrightsEnabledObject::class.java] = {
+                    it?.copyright = parser.nextTextTrimmed()
+                }
+                ParseRSSKeyword.COMMENTS -> mode[CommentEnabledObject::class.java] = {
+                    it?.comments = parser.nextTextTrimmed()
+                }
+                ParseRSSKeyword.ENCLOSURE -> mode[ImageUrlEnabledObject::class.java] = {
+                    val imageUrl = parser.getAttributeValue(
+                        XmlPullParser.NO_NAMESPACE,
+                        ParseRSSKeyword.ENCLOSURE_URL,
+                    )
+                    it?.imageUrls?.add(imageUrl.trim())
+                }
+                ParseRSSKeyword.DC_NS_DATE -> mode[PublishDateEnabledObject::class.java] = {
+                    val date = parser.nextTextTrimmed()
+                    if (date.isNotEmpty()) {
+                        it?.publishDate = date
+                    }
+                }
+                ParseRSSKeyword.DC_NS_TYPE -> mode[CategoryEnabledObject::class.java] = {
+                    val domain = parser.getAttributeValue(
+                        XmlPullParser.NO_NAMESPACE,
+                        ParseRSSKeyword.ATTR_DOMAIN,
+                    )
+                    it?.categories?.add(RSSCategoryObject(domain, parser.nextTextTrimmed()))
+                }
             }
-            ParseRSSKeyword.DESCRIPTION -> mode[DescriptionEnabledObject::class.java] = {
-                it?.description = parser.nextTextTrimmed()
-            }
-            ParseRSSKeyword.LINK -> mode[LinkEnabledObject::class.java] = {
-                it?.link = parser.nextTextTrimmed()
-            }
-            ParseRSSKeyword.PUBLISH_DATE -> mode[PublishDateEnabledObject::class.java] = {
-                it?.publishDate = parser.nextTextTrimmed()
-            }
-            ParseRSSKeyword.LAST_BUILD_DATE -> mode[LastUpdatedEnabledObject::class.java] = {
-                it?.lastUpdated = parser.nextTextTrimmed()
-            }
-            ParseRSSKeyword.URL -> mode[UrlEnabledObject::class.java] = {
-                it?.url = parser.nextTextTrimmed()
-            }
-            ParseRSSKeyword.LANG -> mode[LangEnabledObject::class.java] = {
-                it?.language = parser.nextTextTrimmed()
-            }
-            ParseRSSKeyword.GUID -> mode[GUIdEnabledObject::class.java] = {
-                val isPerma =
-                    (parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_PERMALINK) ?: "true")
-                        .toBoolean()
-                it?.guId = GUId(parser.nextTextTrimmed(), isPerma)
-            }
-            ParseRSSKeyword.AUTHOR -> mode[AuthorEnabledObject::class.java] = {
-                it?.author = RSSPersonAwareObject(parser.nextTextTrimmed())
-            }
-            ParseRSSKeyword.CATEGORY -> mode[CategoryEnabledObject::class.java] = {
-                val domain = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_DOMAIN)
-                it?.category?.add(
-                    RSSCategoryObject(domain, parser.nextTextTrimmed())
-                )
-            }
-            ParseRSSKeyword.COPYRIGHT -> mode[CopyrightsEnabledObject::class.java] = {
-                it?.copyright = parser.nextTextTrimmed()
-            }
-            ParseRSSKeyword.COMMENTS -> mode[CommentEnabledObject::class.java] = {
-                it?.comments = parser.nextTextTrimmed()
-            }
+        } catch (ignored: XmlPullParserException) {
+            // Note: added try/catch to handle RSS with broken and not valid structures, so we
+            //      can continue the parsing instead of return a brutal exception
+            if (BuildConfig.DEBUG) { println("[ParseRSS] Ignored XmlPullParserException on parseNSDefault: $ignored") }
+        } catch (ignored: Exception) {
+            // Note: added try/catch to handle RSS with broken and not valid structures, so we
+            //      can continue the parsing instead of return a brutal exception
+            if (BuildConfig.DEBUG) { println("[ParseRSS] Ignored Exception on parseNSDefault: $ignored") }
         }
     }
 
     private fun parseNSMedia(element: ParseRSSElement) {
         when (element.name) {
             ParseRSSKeyword.CONTENT -> mode[MediaEnabledObject::class.java] = {
-                val media = RSSMediaObject()
-                media.url = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_URL)
-                media.medium = MediaType.from(
-                    parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_MEDIUM)
-                )
-                media.width =
-                    parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_WIDTH).toInt()
-                media.height =
-                    parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HEIGHT).toInt()
-                it?.media?.add(media)
+                try {
+                    val media = RSSMediaObject()
+                    media.url = parser.getAttributeValue(
+                        XmlPullParser.NO_NAMESPACE,
+                        ParseRSSKeyword.ATTR_URL,
+                    )
+                    media.medium = MediaType.from(
+                        parser.getAttributeValue(
+                            XmlPullParser.NO_NAMESPACE,
+                            ParseRSSKeyword.ATTR_MEDIUM,
+                        ),
+                    )
+                    media.width =
+                        parser.getAttributeValue(
+                            XmlPullParser.NO_NAMESPACE,
+                            ParseRSSKeyword.ATTR_WIDTH,
+                        ).toInt()
+                    media.height =
+                        parser.getAttributeValue(
+                            XmlPullParser.NO_NAMESPACE,
+                            ParseRSSKeyword.ATTR_HEIGHT,
+                        ).toInt()
+                    it?.medias?.add(media)
+                } catch (ignored: NumberFormatException) {
+                    if (BuildConfig.DEBUG) {
+                        println("[ParseRSS] Ignored NumberFormatException error: ${ignored.localizedMessage}")
+                    }
+                } catch (ignored: Exception) {
+                    // Note: added try/catch to handle RSS with broken and not valid structures, so we
+                    //      can continue the parsing instead of return a brutal exception
+                    if (BuildConfig.DEBUG) { println("[ParseRSS] Ignored Exception on parseNSMedia: $ignored") }
+                }
             }
             ParseRSSKeyword.DESCRIPTION -> mode[MediaEnabledObject::class.java] = {
                 it?.apply {
-                    media.lastOrNull()?.description = parser.nextTextTrimmed()
+                    medias.lastOrNull()?.description = parser.nextTextTrimmed()
                 }
             }
             ParseRSSKeyword.CREDIT -> mode[MediaEnabledObject::class.java] = {
                 it?.apply {
-                    media.lastOrNull()?.credit = parser.nextTextTrimmed()
+                    medias.lastOrNull()?.credit = parser.nextTextTrimmed()
                 }
             }
         }
@@ -186,10 +249,11 @@ class ParserExecutor<T>(
             ParseRSSKeyword.LINK -> mode[LinkEnabledObject::class.java] = {
                 val rel = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_REL) ?: ""
                 val href = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HREF)
-                if (rel == "self" && it is RSSFeed)
+                if (rel == "self" && it is RSSFeed) {
                     it.link = href
-                else if (rel == "alternate" && it is RSSItem)
+                } else if (rel == "alternate" && it is RSSItem) {
                     it.link = href
+                }
             }
             ParseRSSKeyword.RIGHTS -> mode[CopyrightsEnabledObject::class.java] = {
                 it?.copyright = parser.nextTextTrimmed()

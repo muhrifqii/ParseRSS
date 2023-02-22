@@ -113,9 +113,11 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
                 is Read -> return
                 is MediaNS.Group -> {
                     val item = modes.lastValue()
-                    if (item !is Item) throw ParseRSSException(
-                        "Error ${other.nameToken} should be under the item element",
-                    )
+                    if (item !is Item) {
+                        throw ParseRSSException(
+                            "Error ${other.nameToken} should be under the item element",
+                        )
+                    }
                     other.rssObject = item.rssObject
                 }
                 is Author -> {
@@ -123,7 +125,7 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
                     val channel = (authorHolder as? Channel)?.rssObject
                     val item = (authorHolder as? Item)?.rssObject
                     other.rssObject = item ?: channel ?: throw ParseRSSException(
-                        "Error ${other.nameToken} should be under item/atom:entry or atom:feed"
+                        "Error ${other.nameToken} should be under item/atom:entry or atom:feed",
                     )
                 }
                 is Channel -> {
@@ -166,10 +168,16 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
                     else -> return
                 }
             } catch (err: ClassCastException) {
-                throw ParseRSSException(
-                    "Error on casting ${mode.nameToken} element to ${clazz.name}",
-                    err
-                )
+                if (mode.nameToken == ParseRSSKeyword.IMAGE) {
+                    if (BuildConfig.DEBUG) {
+                        println("[ParseRSS] Ignored error on casting ${mode.nameToken} element to ${clazz.name} with err ${err.localizedMessage}")
+                    }
+                } else {
+                    throw ParseRSSException(
+                        "Error on casting ${mode.nameToken} element to ${clazz.name}",
+                        err,
+                    )
+                }
             }
         }
 
@@ -188,7 +196,7 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
             } catch (err: ClassCastException) {
                 throw ParseRSSException(
                     "Error on casting rss object to ${clazz.name}",
-                    err
+                    err,
                 )
             }
         }

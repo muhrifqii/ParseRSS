@@ -21,16 +21,17 @@ data class RSSItemObject(
     override var link: String? = null,
     override var publishDate: String? = null,
     override var guId: GUId? = null,
-    override var media: MutableList<RSSMedia> = mutableListOf(),
+    override var medias: MutableList<RSSMedia> = mutableListOf(),
     override var author: RSSPersonAware? = null,
-    override var category: MutableList<RSSCategory> = mutableListOf(),
+    override var categories: MutableList<RSSCategory> = mutableListOf(),
     override var comments: String? = null,
     override var lastUpdated: String? = null,
-    override var summary: String? = null
+    override var summary: String? = null,
+    override var imageUrls: MutableList<String?> = mutableListOf()
 ) : RSSItem
 
 data class RSSImageObject(
-    override var url: String = "",
+    override var url: String? = "",
     override var link: String? = null,
     override var title: String? = null
 ) : RSSImage

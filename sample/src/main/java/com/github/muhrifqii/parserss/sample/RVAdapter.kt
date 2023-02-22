@@ -21,7 +21,6 @@ class RVAdapter(var items: List<RSSItem>) : RecyclerView.Adapter<RVHolder>() {
         holder.title.text = items[position].title
         holder.subtitle.text = items[position].description
     }
-
 }
 
 class RVHolder(view: View) : RecyclerView.ViewHolder(view) {

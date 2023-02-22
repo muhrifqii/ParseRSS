@@ -13,7 +13,7 @@ internal object ParseRSSKeyword {
     const val TITLE = "title"
     const val DESCRIPTION = "description"
     const val IMAGE = "image"
-    const val PUBLISH_DATE = "pubdate"
+    const val PUBLISH_DATE = "pubDate"
     const val GUID = "guid"
     const val LINK = "link"
     const val URL = "url"
@@ -22,7 +22,7 @@ internal object ParseRSSKeyword {
     const val AUTHOR = "author"
     const val COPYRIGHT = "copyright"
     const val RIGHTS = "rights"
-    const val LAST_BUILD_DATE = "lastbuilddate"
+    const val LAST_BUILD_DATE = "lastBuildDate"
     const val GROUP = "group"
     const val CONTENT = "content"
     const val CREDIT = "credit"
@@ -48,6 +48,11 @@ internal object ParseRSSKeyword {
     const val ATTR_URI = "uri"
     const val ATTR_HREF = "href"
     const val ATTR_REL = "rel"
+
+    const val ENCLOSURE = "enclosure"
+    const val ENCLOSURE_URL = "url"
+    const val DC_NS_DATE = "date"
+    const val DC_NS_TYPE = "type"
 }
 
 enum class RSSVersion(val elementName: String, val xmlns: String) {
