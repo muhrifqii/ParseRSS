@@ -172,7 +172,11 @@ class ParserExecutor<T>(
         } catch (ignored: XmlPullParserException) {
             // Note: added try/catch to handle RSS with broken and not valid structures, so we
             //      can continue the parsing instead of return a brutal exception
-            if (BuildConfig.DEBUG) { println("[ParseRSS] Ignored XmlPullParserException here: $ignored") }
+            if (BuildConfig.DEBUG) { println("[ParseRSS] Ignored XmlPullParserException on parseNSDefault: $ignored") }
+        } catch (ignored: Exception) {
+            // Note: added try/catch to handle RSS with broken and not valid structures, so we
+            //      can continue the parsing instead of return a brutal exception
+            if (BuildConfig.DEBUG) { println("[ParseRSS] Ignored Exception on parseNSDefault: $ignored") }
         }
     }
 
@@ -183,29 +187,33 @@ class ParserExecutor<T>(
                     val media = RSSMediaObject()
                     media.url = parser.getAttributeValue(
                         XmlPullParser.NO_NAMESPACE,
-                        ParseRSSKeyword.ATTR_URL
+                        ParseRSSKeyword.ATTR_URL,
                     )
                     media.medium = MediaType.from(
                         parser.getAttributeValue(
                             XmlPullParser.NO_NAMESPACE,
-                            ParseRSSKeyword.ATTR_MEDIUM
+                            ParseRSSKeyword.ATTR_MEDIUM,
                         ),
                     )
                     media.width =
                         parser.getAttributeValue(
                             XmlPullParser.NO_NAMESPACE,
-                            ParseRSSKeyword.ATTR_WIDTH
+                            ParseRSSKeyword.ATTR_WIDTH,
                         ).toInt()
                     media.height =
                         parser.getAttributeValue(
                             XmlPullParser.NO_NAMESPACE,
-                            ParseRSSKeyword.ATTR_HEIGHT
+                            ParseRSSKeyword.ATTR_HEIGHT,
                         ).toInt()
                     it?.medias?.add(media)
                 } catch (ignored: NumberFormatException) {
                     if (BuildConfig.DEBUG) {
                         println("[ParseRSS] Ignored NumberFormatException error: ${ignored.localizedMessage}")
                     }
+                } catch (ignored: Exception) {
+                    // Note: added try/catch to handle RSS with broken and not valid structures, so we
+                    //      can continue the parsing instead of return a brutal exception
+                    if (BuildConfig.DEBUG) { println("[ParseRSS] Ignored Exception on parseNSMedia: $ignored") }
                 }
             }
             ParseRSSKeyword.DESCRIPTION -> mode[MediaEnabledObject::class.java] = {
