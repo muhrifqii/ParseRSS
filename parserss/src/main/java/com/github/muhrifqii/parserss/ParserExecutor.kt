@@ -52,7 +52,9 @@ class ParserExecutor<T>(
         if (element.name != RSSVersion.RSS_V1.elementName &&
             element.name != RSSVersion.RSS_V2.elementName &&
             element.name != RSSVersion.RSS_ATOM.elementName
-        ) return element
+        ) {
+            return element
+        }
         val attrCount = parser.attributeCount
         for (i in 0 until attrCount) {
             val attribute = parser.getRSSAttributeElement(i, pullParserNSAware)
@@ -186,10 +188,11 @@ class ParserExecutor<T>(
             ParseRSSKeyword.LINK -> mode[LinkEnabledObject::class.java] = {
                 val rel = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_REL) ?: ""
                 val href = parser.getAttributeValue(XmlPullParser.NO_NAMESPACE, ParseRSSKeyword.ATTR_HREF)
-                if (rel == "self" && it is RSSFeed)
+                if (rel == "self" && it is RSSFeed) {
                     it.link = href
-                else if (rel == "alternate" && it is RSSItem)
+                } else if (rel == "alternate" && it is RSSItem) {
                     it.link = href
+                }
             }
             ParseRSSKeyword.RIGHTS -> mode[CopyrightsEnabledObject::class.java] = {
                 it?.copyright = parser.nextTextTrimmed()

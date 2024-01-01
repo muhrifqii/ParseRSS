@@ -21,7 +21,6 @@ class ParseRSSConverterFactory<R : RSSFeed> private constructor() : Converter.Fa
         annotations: Array<Annotation>,
         retrofit: Retrofit
     ): Converter<ResponseBody, *> {
-
         return ParseRSSConverter<R>()
     }
 

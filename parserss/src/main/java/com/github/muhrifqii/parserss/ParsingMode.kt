@@ -113,9 +113,11 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
                 is Read -> return
                 is MediaNS.Group -> {
                     val item = modes.lastValue()
-                    if (item !is Item) throw ParseRSSException(
-                        "Error ${other.nameToken} should be under the item element",
-                    )
+                    if (item !is Item) {
+                        throw ParseRSSException(
+                            "Error ${other.nameToken} should be under the item element",
+                        )
+                    }
                     other.rssObject = item.rssObject
                 }
                 is Author -> {
