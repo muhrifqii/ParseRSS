@@ -1,12 +1,10 @@
-<p align="center">
-  <h1 align="center">ParseRSS</h1>
-</p>
+<h1 align="center">ParseRSS</h1>
 <p align="center">
   <a href="https://jitpack.io/#muhrifqii/ParseRSS">
     <img src="https://jitpack.io/v/muhrifqii/ParseRSS.svg" />
   </a>
-  <a href="#">
-    <img src="https://img.shields.io/badge/kotlin-1.6.10-yellow"/>
+  <a href="http://kotlinlang.org">
+    <img src="https://img.shields.io/badge/kotlin-1.9.21-yellow"/>
   </a>
   <a href="https://travis-ci.org/muhrifqii/ParseRSS">
     <img src="https://travis-ci.org/muhrifqii/ParseRSS.svg?branch=master" />
@@ -20,7 +18,7 @@
   <a href="https://www.codefactor.io/repository/github/muhrifqii/parserss/overview/master"><img src="https://www.codefactor.io/repository/github/muhrifqii/parserss/badge/master" alt="CodeFactor" /></a>
   <a href="https://codebeat.co/projects/github-com-muhrifqii-parserss-master"><img alt="codebeat badge" src="https://codebeat.co/badges/b4cf5384-6139-4256-90c0-fe432ad648a4" /></a>
 </p>
-<div align="center"><sup>RSS Parser for android<sup></div>
+<p align="center"><sup>RSS Parser for android</sup></p>
 <br/>
 <br/>
 
