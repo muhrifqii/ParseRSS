@@ -1,18 +1,13 @@
 plugins {
-    id 'com.android.application' version "${agp_version}" apply false
-    id 'com.android.library' version "${agp_version}" apply false
-    id 'org.jetbrains.kotlin.android' version "${kotlin_version}" apply false
-    id "io.gitlab.arturbosch.detekt" version "1.20.0-RC2"
-    id "com.diffplug.spotless" version "6.4.1" apply false
+    alias libs.plugins.android.library apply false
+    alias libs.plugins.android.application apply false
+    alias libs.plugins.kotlin.android apply false
+    alias libs.plugins.detekt
+    alias libs.plugins.spotless apply false
 }
 apply from: 'root-reportings.gradle'
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
 detekt {
-    toolVersion = "1.19.0"
     buildUponDefaultConfig = true
     config = files("$projectDir/detekt.yml")
     parallel = true
@@ -26,5 +21,5 @@ detekt {
 }
 
 dependencies {
-    detektPlugins('io.gitlab.arturbosch.detekt:detekt-formatting:1.20.0-RC2')
+    detektPlugins(libs.detekt.formatting)
 }

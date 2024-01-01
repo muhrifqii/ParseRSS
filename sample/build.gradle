@@ -1,16 +1,24 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    alias libs.plugins.android.application
+    alias libs.plugins.kotlin.android
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
 
 android {
-    compileSdkVersion compilesdk_version as int
+    compileSdk compilesdk_version as int
+    namespace 'com.github.muhrifqii.parserss.sample'
     //noinspection GradleDependency
-    buildToolsVersion buildtools_version
     defaultConfig {
         applicationId "com.github.muhrifqii.parserss.sample"
         minSdkVersion minsdk_version
-        targetSdkVersion targetsdk_version
         versionCode project_version_code as int
         versionName project_version
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -21,20 +29,20 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation libs.appcompat
+    implementation libs.core.ktx
+    implementation libs.constraintlayout
+    implementation libs.material
 
-    implementation 'com.github.kittinunf.fuel:fuel:2.3.1'
+    implementation libs.fuel
+
+    implementation "androidx.multidex:multidex:2.0.1"
 
     implementation project(':parserss')
     implementation project(':fuel')
     implementation project(':retrofit')
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation libs.junit
+    androidTestImplementation libs.runner
+    androidTestImplementation libs.espresso.core
 }
