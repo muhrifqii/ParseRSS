@@ -1,28 +1,30 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+}
 apply from: '../reportings.gradle'
 
 group 'com.github.muhrifqii.ParseRSS'
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 android {
-    compileSdkVersion compilesdk_version as int
+    compileSdk compilesdk_version as int
+    namespace 'com.github.muhrifqii.ParseRSS'
     //noinspection GradleDependency
-    buildToolsVersion buildtools_version
     defaultConfig {
         minSdkVersion minsdk_version
-        targetSdkVersion targetsdk_version
-        versionCode project_version_code as int
-        versionName project_version
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.7.3'
-    testImplementation 'org.mockito:mockito-core:4.4.0'
-    testImplementation 'com.google.truth:truth:1.1.3'
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
+    testImplementation libs.junit
+    testImplementation libs.robolectric
+    testImplementation libs.mockito.core
+    testImplementation libs.truth
+    testImplementation libs.kotlinx.coroutines.core
 }

@@ -91,5 +91,9 @@ style:
     max: 3
   PreferToOverPairSyntax:
     active: true
+  UnnecessaryAbstractClass:
+    active: true
+    excludes: *excludedDirs
+
 formatting:
   excludes: *excludedDirs

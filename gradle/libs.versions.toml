@@ -1,0 +1,46 @@
+[versions]
+agp = "8.2.0"
+appcompat = "1.6.1"
+constraintlayout = "2.1.4"
+core-ktx = "1.12.0"
+detekt = "1.23.4"
+espresso-core = "3.5.1"
+fuel = "2.3.1"
+junit = "4.13.2"
+kotlin = "1.9.21"
+kotlinx-coroutines-core = "1.7.3"
+material = "1.11.0"
+mockito-core = "5.3.1"
+ktlint = "1.0.1"
+ktor = "2.3.7"
+retrofit = "2.9.0"
+robolectric = "4.7.3"
+runner = "1.5.2"
+spotless = "6.23.3"
+truth = "1.1.3"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
+fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel" }
+junit = { module = "junit:junit", version.ref = "junit" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+runner = { module = "androidx.test:runner", version.ref = "runner" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+android-lint = { id = "com.android.lint", version.ref = "agp" }
+android-test = { id = "com.android.test", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
