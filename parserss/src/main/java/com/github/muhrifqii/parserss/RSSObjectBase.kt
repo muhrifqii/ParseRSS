@@ -94,7 +94,8 @@ interface RSSImage :
     RSSObject,
     TitleEnabledObject,
     LinkEnabledObject,
-    UrlEnabledObject
+    UrlEnabledObject,
+    DescriptionEnabledObject
 
 interface RSSMedia : RSSObject {
     var height: Int

@@ -13,6 +13,7 @@ object Feed {
       <title>NYT &gt; World News</title>
       <url>https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png</url>
       <link>https://www.nytimes.com/section/world?emc=rss&amp;partner=rss</link>
+      <description>Breaking News, World News and Video</description>
     </image>    
     <item>
       <title>Puncak Peringatan Hari Anak Nasional D.I. Yogyakarta 2018</title>

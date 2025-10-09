@@ -62,4 +62,10 @@ class ParseTest : AbstractTest() {
         assertThat(item2.media).hasSize(11)
         assertThat(item2.media[10].height).isEqualTo(144)
     }
+
+    @Test
+    fun `should able to parse description inside image tag`() {
+        assertThat(feed.image).isNotNull()
+        assertThat(feed.image!!.description).isEqualTo("Breaking News, World News and Video")
+    }
 }
