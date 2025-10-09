@@ -32,7 +32,8 @@ data class RSSItemObject(
 data class RSSImageObject(
     override var url: String = "",
     override var link: String? = null,
-    override var title: String? = null
+    override var title: String? = null,
+    override var description: String? = null,
 ) : RSSImage
 
 data class RSSMediaObject(
