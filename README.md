@@ -4,10 +4,10 @@
     <img src="https://jitpack.io/v/muhrifqii/ParseRSS.svg" />
   </a>
   <a href="http://kotlinlang.org">
-    <img src="https://img.shields.io/badge/kotlin-1.9.21-yellow"/>
+    <img src="https://img.shields.io/badge/kotlin-2.2.20-yellow"/>
   </a>
-  <a href="https://travis-ci.org/muhrifqii/ParseRSS">
-    <img src="https://travis-ci.org/muhrifqii/ParseRSS.svg?branch=master" />
+  <a href="https://github.com/muhrifqii/ParseRSS/actions/workflows/verification.yml">
+    <img src="https://github.com/muhrifqii/ParseRSS/actions/workflows/verification.yml/badge.svg" />
   </a>
   <a href="https://github.com/muhrifqii/ParseRSS/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue" />
@@ -16,7 +16,6 @@
     <img src="https://app.codacy.com/project/badge/Grade/78c8325c65d649719dc627c1e803e647"/>
   </a>
   <a href="https://www.codefactor.io/repository/github/muhrifqii/parserss/overview/master"><img src="https://www.codefactor.io/repository/github/muhrifqii/parserss/badge/master" alt="CodeFactor" /></a>
-  <a href="https://codebeat.co/projects/github-com-muhrifqii-parserss-master"><img alt="codebeat badge" src="https://codebeat.co/badges/b4cf5384-6139-4256-90c0-fe432ad648a4" /></a>
 </p>
 <p align="center"><sup>RSS Parser for android</sup></p>
 <br/>

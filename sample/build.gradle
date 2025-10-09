@@ -5,17 +5,17 @@ plugins {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 android {
-    compileSdk compilesdk_version as int
+    compileSdk = compilesdk_version as int
     namespace 'com.github.muhrifqii.parserss.sample'
     //noinspection GradleDependency
     defaultConfig {
         applicationId "com.github.muhrifqii.parserss.sample"
-        minSdkVersion minsdk_version
+        minSdkVersion 21
         versionCode project_version_code as int
         versionName project_version
         multiDexEnabled true
@@ -36,7 +36,7 @@ dependencies {
 
     implementation libs.fuel
 
-    implementation "androidx.multidex:multidex:2.0.1"
+    implementation libs.multidex
 
     implementation project(':parserss')
     implementation project(':fuel')
