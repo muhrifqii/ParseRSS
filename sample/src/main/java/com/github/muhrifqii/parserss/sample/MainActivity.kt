@@ -1,5 +1,6 @@
 package com.github.muhrifqii.parserss.sample
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -28,12 +29,15 @@ class MainActivity : AppCompatActivity() {
         loadFeedUsingFuel()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun loadFeedUsingFuel() {
-        Fuel.get("http://dp3ap2.jogjaprov.go.id/rss")
+        Fuel.get("https://www.aljazeera.com/xml/rss/all.xml")
             .responseRss<RSSFeedObject> { result ->
                 result.fold({
                     adapter.items = it.items
-                    adapter.notifyDataSetChanged()
+                    runOnUiThread {
+                        adapter.notifyDataSetChanged()
+                    }
                 }, {
                     print(it)
                 })
