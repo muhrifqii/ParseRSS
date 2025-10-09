@@ -8,12 +8,12 @@ group 'com.github.muhrifqii.ParseRSS'
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 android {
-    compileSdk compilesdk_version as int
+    compileSdk = compilesdk_version as int
     namespace 'com.github.muhrifqii.ParseRSS'
     //noinspection GradleDependency
     defaultConfig {
