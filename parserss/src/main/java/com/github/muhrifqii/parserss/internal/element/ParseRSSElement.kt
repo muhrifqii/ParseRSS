@@ -1,4 +1,4 @@
-package com.github.muhrifqii.parserss.utils
+package com.github.muhrifqii.parserss.internal.element
 
 interface PrefixNamedHolder {
     val prefix: String
@@ -14,7 +14,8 @@ interface PrefixNamedHolder {
 /**
  * Hold the basic element properties: prefix and name. value always return empty
  */
-data class ParseRSSElement(override val prefix: String, override val name: String) : PrefixNamedHolder {
+data class ParseRSSElement(override val prefix: String, override val name: String) :
+    PrefixNamedHolder {
     override val value: String
         get() = ""
 }
@@ -22,5 +23,9 @@ data class ParseRSSElement(override val prefix: String, override val name: Strin
 /**
  * Hold the basic attribute properties: prefix, name, and value
  */
-data class ParseRSSAttribute(override val prefix: String, override val name: String, override val value: String) :
+data class ParseRSSAttribute(
+    override val prefix: String,
+    override val name: String,
+    override val value: String
+) :
     PrefixNamedHolder

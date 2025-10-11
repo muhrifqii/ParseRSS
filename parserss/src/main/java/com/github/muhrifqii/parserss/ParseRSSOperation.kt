@@ -8,7 +8,6 @@ interface ParseRSSOperation {
      * Release Parser Factory
      */
     fun release()
-    var applyRSSFeedConstructor: (() -> RSSFeed)
 
     /**
      * Parse RSS from Reader Object
@@ -26,5 +25,9 @@ interface ParseRSSOperation {
      * Parse RSS customizable
      */
     @Throws(ParseRSSException::class)
-    fun <T : RSSFeed> parse(xml: Reader, strictlyNamespaceChecking: Boolean, feedSupplier: () -> T): T
+    fun <T : RSSFeed> parse(
+        xml: Reader,
+        strictlyNamespaceChecking: Boolean,
+        feedSupplier: () -> T
+    ): T
 }
