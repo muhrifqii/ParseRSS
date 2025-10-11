@@ -21,62 +21,70 @@
 <br/>
 <br/>
 
-Simple, concise, and extensible RSS Parser in the entire coffee shop. It can capture these information from the RSS
+> ### Breaking Change Notice
+> The development of Multiplatform support will be started on version `0.9.x`.
+> For non breaking changes, keep using version `0.9.0` or `0.8.x`.
+> The milestone can be seen [here](https://github.com/muhrifqii/ParseRSS/milestone/1)
+
+Simple, concise, and extensible RSS Parser in the entire coffee shop. It can capture these
+information from the RSS
 article:
 
 - RSS Version based on https://validator.w3.org/feed/docs/
-  - [x] [Atom](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc4287.html)
-  - [x] [RSS V1](https://validator.w3.org/feed/docs/rss1.html#s5.2)
-  - [x] [RSS V0.91](https://www.rssboard.org/rss-specification)
-  - [x] [RSS V0.92](https://www.rssboard.org/rss-specification)
-  - [x] [RSS V2](https://www.rssboard.org/rss-specification)
-  - [x] Specific Version Handling
+    - [x] [Atom](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc4287.html)
+    - [x] [RSS V1](https://validator.w3.org/feed/docs/rss1.html#s5.2)
+    - [x] [RSS V0.91](https://www.rssboard.org/rss-specification)
+    - [x] [RSS V0.92](https://www.rssboard.org/rss-specification)
+    - [x] [RSS V2](https://www.rssboard.org/rss-specification)
+    - [x] Specific Version Handling
 - RSS Namespace Checking
-  - [x] Atom
-  - [ ] DC
-  - [x] Media
-  - [x] RDF
-  - [ ] SY
-  - [ ] Specific namespaces
+    - [x] Atom
+    - [ ] DC
+    - [x] Media
+    - [x] RDF
+    - [ ] SY
+    - [ ] Specific namespaces
 - Channel
-  - [x] Title `<title>`
-  - [x] Description `<description>`
-  - [x] Link `<link>`
-  - [x] Publication Date `<pubDate>`
-  - [x] Image `<image>`
-  - [x] Language `<language>`
-  - [x] Copyright `<copyright>`
-  - [x] Rights `<rights>`
-  - [x] Last Build Date `<lastBuildDate>`
-  - [x] Atom Link `<atom:link>`
-  - [ ] TimeToLive `<ttl>`
-  - [ ] SkipHours `<skipHours>`
-  - [ ] SkipDays `<skipDays>`
-  - [ ] Managing Editor `<managingEditor`
+    - [x] Title `<title>`
+    - [x] Description `<description>`
+    - [x] Link `<link>`
+    - [x] Publication Date `<pubDate>`
+    - [x] Image `<image>`
+    - [x] Language `<language>`
+    - [x] Copyright `<copyright>`
+    - [x] Rights `<rights>`
+    - [x] Last Build Date `<lastBuildDate>`
+    - [x] Atom Link `<atom:link>`
+    - [ ] TimeToLive `<ttl>`
+    - [ ] SkipHours `<skipHours>`
+    - [ ] SkipDays `<skipDays>`
+    - [ ] Managing Editor `<managingEditor`
 
 - Items Element
-  - [x] Title `<title>`
-  - [x] Description `<description>`
-  - [x] Link `<link>`
-  - [x] Item GUId `<guid>`
-  - [x] Media Content _(NYT)_ `<media:content>`
-  - [x] Media Credit _(NYT)_ `<media:credit>`
-  - [x] Media Description _(NYT)_ `<media:description>`
-  - [x] Publication Date `<pubDate>`
-  - [x] Author `<author>`
-  - [x] Categories `<category>`
-  - [ ] Source `<source>`
-  - [ ] Enclosure `<enclosure>`
-  - [x] Atom Link `<atom:link>`
-  - [ ] DC Creator _(NYT)_ `<dc:creator>`
-  - [x] Comments `<comments>`
+    - [x] Title `<title>`
+    - [x] Description `<description>`
+    - [x] Link `<link>`
+    - [x] Item GUId `<guid>`
+    - [x] Media Content _(NYT)_ `<media:content>`
+    - [x] Media Credit _(NYT)_ `<media:credit>`
+    - [x] Media Description _(NYT)_ `<media:description>`
+    - [x] Publication Date `<pubDate>`
+    - [x] Author `<author>`
+    - [x] Categories `<category>`
+    - [ ] Source `<source>`
+    - [ ] Enclosure `<enclosure>`
+    - [x] Atom Link `<atom:link>`
+    - [ ] DC Creator _(NYT)_ `<dc:creator>`
+    - [x] Comments `<comments>`
 
-`ParseRSS` mainly has two main objects. `RSSFeedObject` and `RSSItemObject`. You can create your own parsing strategy by
+`ParseRSS` mainly has two main objects. `RSSFeedObject` and `RSSItemObject`. You can create your own
+parsing strategy by
 implementing `RSSFeed` and `RSSItem`.
 
 ## Usage
 
-ParseRSS depends on `XmlPullParser`, so feed it at least once in a lifetime. First thing first, the initialization part.
+ParseRSS depends on `XmlPullParser`, so feed it at least once in a lifetime. First thing first, the
+initialization part.
 You can put it on your Application onCreate function.
 
 ```kotlin
@@ -90,14 +98,16 @@ Next, feed the RSS string into ParseRSS
 ```kotlin
 val feed: RSSFeedObject = ParseRSS.parse(xml)
 feed.items.forEach {
-  print(it.title)
+    print(it.title)
 }
 ```
 
 ### ParseRSS as a Converter
 
-ParseRSS does not have its own networking mechanism. Instead, it benefits from infamous networking library such as
-[Retrofit](https://square.github.io/retrofit/), and [Fuel](https://github.com/kittinunf/fuel). By using
+ParseRSS does not have its own networking mechanism. Instead, it benefits from infamous networking
+library such as
+[Retrofit](https://square.github.io/retrofit/), and [Fuel](https://github.com/kittinunf/fuel). By
+using
 ConverterFactory, ParseRSS is ready to ship without breaking your project design pattern.
 
 #### Fuel
@@ -106,13 +116,13 @@ Convert Fuel Response into RSSFeed by using `responseRss` function.
 
 ```kotlin
 Fuel.get(URL).responseRss<RSSFeedObject> { result ->
-  result.fold({ feed ->
-    feed.items.forEach {
-      print(it.title)
-    }
-  }, { error ->
-    print(error)
-  })
+    result.fold({ feed ->
+        feed.items.forEach {
+            print(it.title)
+        }
+    }, { error ->
+        print(error)
+    })
 }
 ```
 
