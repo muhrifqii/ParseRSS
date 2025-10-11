@@ -131,12 +131,13 @@ class ParserExecutor<T>(
             }
 
             ParseRSSKeyword.GUID -> mode[GUIdEnabledObject::class.java] = {
-                val isPerma =
-                    (parser.getAttributeValue(
+                val isPerma = (
+                    parser.getAttributeValue(
                         XmlPullParser.NO_NAMESPACE,
                         ParseRSSKeyword.ATTR_PERMALINK
-                    ) ?: "true")
-                        .toBoolean()
+                    ) ?: "true"
+                    )
+                    .toBoolean()
                 it?.guId = GUId(parser.nextTextTrimmed(), isPerma)
             }
 

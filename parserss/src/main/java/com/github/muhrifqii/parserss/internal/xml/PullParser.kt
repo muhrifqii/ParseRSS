@@ -77,4 +77,3 @@ interface PullParserFactory {
      */
     fun newPullParser(): PullParser
 }
-
