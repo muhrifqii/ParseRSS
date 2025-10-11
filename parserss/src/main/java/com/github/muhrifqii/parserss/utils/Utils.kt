@@ -63,6 +63,9 @@ fun PullParser.nextTextTrimmed() = nextText().trim()
  */
 fun <K, T> LinkedHashMap<K, T>.lastValue() = values.last()
 
+/**
+ * Parse Int or Zero if String is null
+ */
 fun String?.toIntOrZero() = this?.toInt() ?: 0
 
 /**

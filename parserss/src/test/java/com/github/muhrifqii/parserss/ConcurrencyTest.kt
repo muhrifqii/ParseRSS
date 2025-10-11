@@ -41,14 +41,17 @@ class ConcurrencyTest : AbstractTest() {
             assertThat(it.items[0].title).isEqualTo("Puncak Peringatan Hari Anak Nasional D.I. Yogyakarta 2018")
             assertThat(it.items[1].title).isEqualTo("Pemda DIY raih penghargaan pada peringatan HAN 2018 di Surabaya")
         }
+
         "XML.com" -> {
             assertThat(it.items[0].title).isEqualTo("Processing Inclusions with XSLT")
             assertThat(it.items[1].title).isEqualTo("Putting RDF to Work")
         }
+
         "Steam RSS News Feed" -> {
             assertThat(it.items[0].title).isEqualTo("Team Fortress 2 Update Released")
             assertThat(it.items[1].title).isEqualTo("Team Fortress 2 Update Released")
         }
+
         else -> println("unknown")
     }
 }
