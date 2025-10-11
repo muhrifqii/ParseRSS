@@ -1,5 +1,6 @@
 package com.github.muhrifqii.parserss.xml
 
+import org.kobjects.ktxml.api.EventType
 import org.kobjects.ktxml.api.XmlPullParser
 
 /**
@@ -7,10 +8,12 @@ import org.kobjects.ktxml.api.XmlPullParser
  */
 class NativePullParser(private val parser: XmlPullParser) : PullParser {
 
-    override val eventType: Int
-        get() = parser.eventType
+    override val eventType: PullParserEventType
+        get() = parser.eventType.mapEventType()
 
-    override fun next(): Int = parser.next()
+    override fun next(): PullParserEventType = parser.next().mapEventType()
+
+    override fun nextToken(): PullParserEventType = parser.nextToken().mapEventType()
 
     override val name: String?
         get() = parser.name
@@ -31,4 +34,11 @@ class NativePullParser(private val parser: XmlPullParser) : PullParser {
         parser.getAttributeValue(namespace ?: "", name)
 
     override fun nextText(): String = parser.nextText()
+}
+
+/**
+ * Map event type
+ */
+private fun EventType.mapEventType() = with(this) {
+    PullParserEventType.entries[ordinal]
 }

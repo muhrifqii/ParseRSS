@@ -12,10 +12,12 @@ class JvmPullParser(private val parser: XmlPullParser) : PullParser {
         parser.setInput(reader)
     }
 
-    override val eventType: Int
-        get() = parser.eventType
+    override val eventType: PullParserEventType
+        get() = parser.eventType.intoEvent()
 
-    override fun next(): Int = parser.next()
+    override fun next(): PullParserEventType = parser.next().intoEvent()
+
+    override fun nextToken(): PullParserEventType = parser.nextToken().intoEvent()
 
     override val name: String?
         get() = parser.name
@@ -41,7 +43,7 @@ class JvmPullParser(private val parser: XmlPullParser) : PullParser {
 /**
  * XmlPullParserFactory implementation
  */
-class JvmPullParserFactory(private val factory: XmlPullParserFactory) : PullParserFactory {
+internal class JvmPullParserFactory(private val factory: XmlPullParserFactory) : PullParserFactory {
     override var isNamespaceAware: Boolean
         get() = factory.isNamespaceAware
         set(value) {

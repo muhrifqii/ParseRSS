@@ -4,17 +4,22 @@ package com.github.muhrifqii.parserss.xml
  * Abstraction interface for XML parsing to enable platform-independent implementations.
  * This allows swapping between different XML parser implementations (e.g., XmlPullParser, ktxml).
  */
-interface PullParser : PlatformPullParser {
+internal interface PullParser : PlatformPullParser {
 
     /**
      * Get the current event type
      */
-    val eventType: Int
+    val eventType: PullParserEventType
 
     /**
      * Move to the next parsing event
      */
-    fun next(): Int
+    fun next(): PullParserEventType
+
+    /**
+     * Move to the next parsing event in a token level
+     */
+    fun nextToken(): PullParserEventType
 
     /**
      * Get the name of the current element
@@ -60,7 +65,7 @@ interface PullParser : PlatformPullParser {
 /**
  * Factory interface for creating PullParser instances
  */
-interface PullParserFactory {
+internal interface PullParserFactory {
     /**
      * Set whether the parser should be namespace aware
      */
