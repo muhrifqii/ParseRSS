@@ -18,6 +18,7 @@ robolectric = "4.16"
 runner = "1.7.0"
 spotless = "8.0.0"
 truth = "1.4.5"
+ktxml = "1.0.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -35,6 +36,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 runner = { module = "androidx.test:runner", version.ref = "runner" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
+ktxml = { module = "org.kobjects.ktxml:core", version.ref = "ktxml" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
