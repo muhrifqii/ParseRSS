@@ -1,5 +1,7 @@
 package com.github.muhrifqii.parserss
 
+import com.github.muhrifqii.parserss.element.ParseRSSKeyword
+import com.github.muhrifqii.parserss.element.RSSVersion
 import com.github.muhrifqii.parserss.internal.element.ParseRSSElement
 import com.github.muhrifqii.parserss.internal.xml.PullParser
 import com.github.muhrifqii.parserss.internal.xml.PullParserFactory
@@ -132,11 +134,11 @@ class ParserExecutor<T>(
 
             ParseRSSKeyword.GUID -> mode[GUIdEnabledObject::class.java] = {
                 val isPerma = (
-                    parser.getAttributeValue(
-                        XmlPullParser.NO_NAMESPACE,
-                        ParseRSSKeyword.ATTR_PERMALINK
-                    ) ?: "true"
-                    )
+                        parser.getAttributeValue(
+                            XmlPullParser.NO_NAMESPACE,
+                            ParseRSSKeyword.ATTR_PERMALINK
+                        ) ?: "true"
+                        )
                     .toBoolean()
                 it?.guId = GUId(parser.nextTextTrimmed(), isPerma)
             }

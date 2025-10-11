@@ -1,5 +1,7 @@
 package com.github.muhrifqii.parserss
 
+import com.github.muhrifqii.parserss.element.ParseRSSKeyword
+import com.github.muhrifqii.parserss.element.RSSVersion
 import com.github.muhrifqii.parserss.utils.lastValue
 
 /**
@@ -52,7 +54,8 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
     /**
      * Item mode to parse an item element
      */
-    class Item(private val cleanupFn: ((RSSItem) -> Unit)? = null) : ParsingMode(ParseRSSKeyword.ITEM) {
+    class Item(private val cleanupFn: ((RSSItem) -> Unit)? = null) :
+        ParsingMode(ParseRSSKeyword.ITEM) {
         var rssObject: RSSItem = RSSItemObject()
             private set
 
@@ -65,7 +68,8 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
     /**
      * Image mode to parse an image object
      */
-    class Image(private val cleanupFn: ((RSSImage) -> Unit)? = null) : ParsingMode(ParseRSSKeyword.IMAGE) {
+    class Image(private val cleanupFn: ((RSSImage) -> Unit)? = null) :
+        ParsingMode(ParseRSSKeyword.IMAGE) {
         var rssObject: RSSImage = RSSImageObject()
             private set
 
@@ -120,6 +124,7 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
                     }
                     other.rssObject = item.rssObject
                 }
+
                 is Author -> {
                     val authorHolder = modes.lastValue()
                     val channel = (authorHolder as? Channel)?.rssObject
@@ -128,11 +133,14 @@ sealed class ParsingMode(val nameToken: String) : ParsingModeOperation {
                         "Error ${other.nameToken} should be under item/atom:entry or atom:feed"
                     )
                 }
+
                 is Channel -> {
-                    val rootVersion = modes[RootDocument.token] ?: throw ParseRSSException("RSS not supported")
+                    val rootVersion =
+                        modes[RootDocument.token] ?: throw ParseRSSException("RSS not supported")
                     other.rssObject.version = rootVersion.version()
                     modes[other.nameToken] = other
                 }
+
                 else -> {
                     modes[other.nameToken] = other
                 }
@@ -214,6 +222,7 @@ operator fun ParsingMode.plusAssign(other: ParsingMode) {
         is ParsingMode.Read -> {
             this += other
         }
+
         else -> return
     }
 }
@@ -226,6 +235,7 @@ operator fun ParsingMode.minusAssign(other: ParsingMode) {
         is ParsingMode.Read -> {
             this -= other
         }
+
         else -> return
     }
 }
@@ -238,6 +248,7 @@ operator fun <T : RSSObject> ParsingMode.set(clazz: Class<T>, valueSetter: (T?) 
         is ParsingMode.Read -> {
             this[clazz] = valueSetter
         }
+
         else -> return
     }
 }
@@ -249,6 +260,7 @@ operator fun <T : RSSObject> ParsingMode.get(clazz: Class<T>): T? = when (this) 
     is ParsingMode.Read -> {
         this[clazz]
     }
+
     else -> null
 }
 
@@ -260,6 +272,7 @@ fun ParsingMode.contains(other: ParsingMode): Boolean {
         is ParsingMode.Read -> {
             contains(other)
         }
+
         else -> false
     }
 }

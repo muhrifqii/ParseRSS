@@ -1,4 +1,4 @@
-package com.github.muhrifqii.parserss
+package com.github.muhrifqii.parserss.element
 
 internal object ParseRSSKeyword {
 
@@ -62,12 +62,11 @@ enum class RSSVersion(val elementName: String, val xmlns: String) {
         /**
          * Deduce version based from rss element
          */
-        fun valueOfElement(elementName: String): com.github.muhrifqii.parserss.element.RSSVersion =
-            when (elementName) {
-                RSS_V1.elementName -> RSS_V1
-                RSS_V2.elementName -> RSS_V2
-                RSS_ATOM.elementName -> RSS_ATOM
-                else -> throw IllegalArgumentException("$elementName is not a valid element")
-            }
+        fun valueOfElement(elementName: String): RSSVersion = when (elementName) {
+            RSS_V1.elementName -> RSS_V1
+            RSS_V2.elementName -> RSS_V2
+            RSS_ATOM.elementName -> RSS_ATOM
+            else -> throw IllegalArgumentException("$elementName is not a valid element")
+        }
     }
 }

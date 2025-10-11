@@ -1,5 +1,6 @@
 package com.github.muhrifqii.parserss
 
+import com.github.muhrifqii.parserss.element.RSSVersion
 import com.github.muhrifqii.parserss.samples.Feed
 import com.google.common.truth.Truth
 import org.junit.Test
