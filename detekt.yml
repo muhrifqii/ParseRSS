@@ -14,6 +14,7 @@ comments:
       - '**/src/*test/**'
       - '**/src/*Test/**'
       - '**/src/sample/**'
+      - '**/*.gradle.kts'
     searchInNestedClass: true
     searchInInnerClass: true
     searchInInnerObject: true
