@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.kittinunf.fuel.Fuel
-import com.github.muhrifqii.parserss.RSSFeedObject
 import com.github.muhrifqii.parserss.fuel.responseRss
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     fun loadFeedUsingFuel() {
         Fuel.get("https://www.aljazeera.com/xml/rss/all.xml")
-            .responseRss<RSSFeedObject> { result ->
+            .responseRss { result ->
                 result.fold({
                     adapter.items = it.items
                     runOnUiThread {

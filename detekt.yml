@@ -1,7 +1,6 @@
 build:
   maxIssues: 0
   excludeCorrectable: false
-  weights:
 config:
   validation: true
   warningsAsErrors: false
@@ -12,9 +11,9 @@ comments:
   UndocumentedPublicClass:
     active: false
     excludes: &excludedDirs
-      - '**/test/**'
-      - '**/androidTest/**'
-      - '**/sample/**'
+      - '**/src/*test/**'
+      - '**/src/*Test/**'
+      - '**/src/sample/**'
     searchInNestedClass: true
     searchInInnerClass: true
     searchInInnerObject: true
@@ -92,6 +91,9 @@ style:
   PreferToOverPairSyntax:
     active: true
   UnnecessaryAbstractClass:
+    active: true
+    excludes: *excludedDirs
+  MagicNumber:
     active: true
     excludes: *excludedDirs
 

@@ -1,33 +1,38 @@
 package com.github.muhrifqii.parserss.retrofit
 
-import com.github.muhrifqii.parserss.ParseRSS
-import com.github.muhrifqii.parserss.RSSFeed
+import com.github.muhrifqii.parserss.RSSFeedObject
+import com.github.muhrifqii.parserss.parseRSS
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
 
-internal class ParseRSSConverter<R : RSSFeed> : Converter<ResponseBody, R> {
-    override fun convert(value: ResponseBody): R {
-        return ParseRSS.parse(value.charStream())
+internal class ParseRSSConverter(
+    private val namespaceAware: Boolean
+) : Converter<ResponseBody, RSSFeedObject> {
+    override fun convert(value: ResponseBody): RSSFeedObject {
+        return parseRSS(value.charStream(), namespaceAware).getOrThrow()
     }
 }
 
 /** Creates [Converter] instances based on a type and target usage. */
-class ParseRSSConverterFactory<R : RSSFeed> private constructor() : Converter.Factory() {
+class ParseRSSConverterFactory(
+    private val namespaceAware: Boolean
+) : Converter.Factory() {
 
     override fun responseBodyConverter(
         type: Type,
         annotations: Array<Annotation>,
         retrofit: Retrofit
     ): Converter<ResponseBody, *> {
-        return ParseRSSConverter<R>()
+        return ParseRSSConverter(namespaceAware)
     }
 
     companion object {
         /**
-         * create [ParseRSS] converter factory
+         * create **ParseRSS** converter factory
          */
-        fun <R : RSSFeed> create() = ParseRSSConverterFactory<R>()
+        fun create(namespaceAware: Boolean = false) =
+            ParseRSSConverterFactory(namespaceAware)
     }
 }

@@ -2,47 +2,37 @@ package com.github.muhrifqii.parserss.fuel
 
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.github.kittinunf.fuel.core.ResponseHandler
-import com.github.kittinunf.fuel.core.ResponseResultHandler
 import com.github.kittinunf.fuel.core.ResultHandler
+import com.github.kittinunf.fuel.core.await
+import com.github.kittinunf.fuel.core.awaitResult
 import com.github.kittinunf.fuel.core.response
-import com.github.muhrifqii.parserss.ParseRSS
 import com.github.muhrifqii.parserss.RSSFeed
+import com.github.muhrifqii.parserss.RSSFeedObject
+import com.github.muhrifqii.parserss.parseRSS
 import java.io.Reader
 
 /**
- * Deserialize the [Response] into a [RSSFeed] using [ParseRSS]
+ * Deserialize the [com.github.kittinunf.fuel.core.Response] into a [RSSFeed] using **ParseRSS**
  */
-fun Request.responseRss() = response(parseRss())
-
-/**
- * Deserialize the [Response] into a [RSSFeed] using [ParseRSS]
- */
-inline fun <reified T : RSSFeed> Request.responseRss(handler: ResponseHandler<T>) =
+fun Request.responseRss(handler: ResultHandler<RSSFeedObject>) =
     response(parseRss(), handler)
 
 /**
- * Deserialize the [Response] into a [RSSFeed] using [ParseRSS]
+ * Deserialize the [com.github.kittinunf.fuel.core.Response] into a [RSSFeed] using **ParseRSS**
  */
-inline fun <reified T : RSSFeed> Request.responseRss(noinline handler: ResultHandler<T>) =
-    response(parseRss(), handler)
+suspend fun Request.awaitRss() =
+    await(parseRss())
 
 /**
- * Deserialize the [Response] into a [RSSFeed] using [ParseRSS]
+ * Deserialize the [com.github.kittinunf.fuel.core.Response] into a [RSSFeed] using **ParseRSS**
  */
-inline fun <reified T : RSSFeed> Request.responseRss(noinline handler: ResponseResultHandler<T>) =
-    response(parseRss(), handler)
+suspend fun Request.awaitRssResult() =
+    awaitResult(parseRss())
 
-/**
- * Inlined function for providing [ParseRSS] parser on to [ResponseDeserializable]
- */
-inline fun <reified T : RSSFeed> parseRss(): ResponseDeserializable<T> =
-    object : ResponseDeserializable<T> {
-        override fun deserialize(content: String): T {
-            return ParseRSS.parse(content)
-        }
 
-        override fun deserialize(reader: Reader): T {
-            return ParseRSS.parse(reader)
+internal fun parseRss(): ResponseDeserializable<RSSFeedObject> =
+    object : ResponseDeserializable<RSSFeedObject> {
+        override fun deserialize(reader: Reader): RSSFeedObject {
+            return parseRSS(reader).getOrThrow()
         }
     }
