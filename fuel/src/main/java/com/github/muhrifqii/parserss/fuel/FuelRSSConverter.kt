@@ -29,7 +29,6 @@ suspend fun Request.awaitRss() =
 suspend fun Request.awaitRssResult() =
     awaitResult(parseRss())
 
-
 internal fun parseRss(): ResponseDeserializable<RSSFeedObject> =
     object : ResponseDeserializable<RSSFeedObject> {
         override fun deserialize(reader: Reader): RSSFeedObject {

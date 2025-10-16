@@ -11,7 +11,7 @@ jobs:
           distribution: 'temurin'
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: detekt testAll
+          arguments: detekt build allTest
 #      - uses: github/codeql-action/upload-sarif@v1
 #        with:
 #          sarif_file: build/reports/detekt/detekt.sarif
