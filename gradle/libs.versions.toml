@@ -20,7 +20,7 @@ spotless = "8.0.0"
 truth = "1.4.5"
 ktxml = "1.0.0"
 kxml2 = "2.3.0"
-dokka = "2.0.0"
+dokka = "2.1.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }

@@ -7,7 +7,10 @@ import java.io.Reader
 /**
  * Jvm's XmlPullParser implementation of PullParser
  */
-class JvmPullParser(private val parser: XmlPullParser) : PullParser {
+internal class JvmPullParser(
+    private val parser: XmlPullParser,
+    override val isNamespaceAware: Boolean
+) : PullParser {
     override fun setInput(reader: Reader) {
         parser.setInput(reader)
     }
@@ -43,7 +46,9 @@ class JvmPullParser(private val parser: XmlPullParser) : PullParser {
 /**
  * XmlPullParserFactory implementation
  */
-internal class JvmPullParserFactory(private val factory: XmlPullParserFactory) : PullParserFactory {
+class JvmPullParserFactory : PullParserFactory {
+    private val factory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
+
     override var isNamespaceAware: Boolean
         get() = factory.isNamespaceAware
         set(value) {
@@ -51,6 +56,6 @@ internal class JvmPullParserFactory(private val factory: XmlPullParserFactory) :
         }
 
     override fun newPullParser(): PullParser {
-        return JvmPullParser(factory.newPullParser())
+        return JvmPullParser(factory.newPullParser(), isNamespaceAware)
     }
 }

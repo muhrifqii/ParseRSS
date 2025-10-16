@@ -47,3 +47,6 @@ internal fun PullParser.getRSSAttributeElement(
         ParseRSSAttribute(holder.prefix, holder.name, fxValue())
     }
 }
+
+internal fun Int.intoEvent(): PullParserEventType =
+    PullParserEventType.entries[this]

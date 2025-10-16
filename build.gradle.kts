@@ -9,10 +9,10 @@ plugins {
 
 detekt {
     buildUponDefaultConfig = true
-    config = files("$projectDir/detekt.yml")
+    config.setFrom("$projectDir/detekt.yml")
     parallel = true
 
-    source = files(projectDir)
+    source.setFrom(projectDir)
     reports {
         xml.required.set(true)
         html.required.set(true)
@@ -23,4 +23,15 @@ detekt {
 
 dependencies {
     detektPlugins(libs.detekt.formatting)
+}
+
+tasks.register("testAll") {
+    group = "verification"
+    description = "Run tests for all platforms"
+
+    dependsOn(
+        "jvmTest",
+        "testDebugUnitTest",
+        "iosSimulatorArm64Test"
+    )
 }

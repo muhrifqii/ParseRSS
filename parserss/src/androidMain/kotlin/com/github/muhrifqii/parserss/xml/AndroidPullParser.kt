@@ -7,7 +7,10 @@ import java.io.Reader
 /**
  * Android's XmlPullParser implementation of PullParser
  */
-class AndroidPullParser(private val parser: XmlPullParser) : PullParser {
+internal class AndroidPullParser(
+    private val parser: XmlPullParser,
+    override val isNamespaceAware: Boolean
+) : PullParser {
     override fun setInput(reader: Reader) {
         parser.setInput(reader)
     }
@@ -43,8 +46,10 @@ class AndroidPullParser(private val parser: XmlPullParser) : PullParser {
 /**
  * XmlPullParserFactory implementation
  */
-internal class AndroidPullParserFactory(private val factory: XmlPullParserFactory) :
-    PullParserFactory {
+class AndroidPullParserFactory(
+    private val factory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
+) : PullParserFactory {
+
     override var isNamespaceAware: Boolean
         get() = factory.isNamespaceAware
         set(value) {
@@ -52,6 +57,6 @@ internal class AndroidPullParserFactory(private val factory: XmlPullParserFactor
         }
 
     override fun newPullParser(): PullParser {
-        return AndroidPullParser(factory.newPullParser())
+        return AndroidPullParser(factory.newPullParser(), isNamespaceAware)
     }
 }

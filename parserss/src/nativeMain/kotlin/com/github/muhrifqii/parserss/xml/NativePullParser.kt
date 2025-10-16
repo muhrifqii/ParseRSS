@@ -2,11 +2,23 @@ package com.github.muhrifqii.parserss.xml
 
 import org.kobjects.ktxml.api.EventType
 import org.kobjects.ktxml.api.XmlPullParser
+import org.kobjects.ktxml.mini.MiniXmlPullParser
 
 /**
- * Jvm's XmlPullParser implementation of PullParser
+ * Native's ktxml XmlPullParser implementation of PullParser
  */
-class NativePullParser(private val parser: XmlPullParser) : PullParser {
+class NativePullParser(
+    override val isNamespaceAware: Boolean
+) : PullParser {
+
+    private lateinit var parser: XmlPullParser
+
+    override fun setInput(xml: CharIterator) {
+        parser = MiniXmlPullParser(
+            source = xml,
+            processNamespaces = isNamespaceAware
+        )
+    }
 
     override val eventType: PullParserEventType
         get() = parser.eventType.mapEventType()
@@ -34,6 +46,18 @@ class NativePullParser(private val parser: XmlPullParser) : PullParser {
         parser.getAttributeValue(namespace ?: "", name)
 
     override fun nextText(): String = parser.nextText()
+}
+
+/**
+ * XmlPullParserFactory implementation
+ */
+internal class NativePullParserFactory : PullParserFactory {
+
+    override var isNamespaceAware: Boolean = false
+
+    override fun newPullParser(): PullParser {
+        return NativePullParser(isNamespaceAware)
+    }
 }
 
 /**

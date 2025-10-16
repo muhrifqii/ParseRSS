@@ -2,6 +2,13 @@ build:
   maxIssues: 0
   excludeCorrectable: false
   weights:
+  excludes:
+    - '**/test/**'
+    - '**/androidTest/**'
+    - '**/commonTest/**'
+    - '**/jvmCommonTest/**'
+    - '**/nativeTest/**'
+    - '**/sample/**'
 config:
   validation: true
   warningsAsErrors: false
@@ -14,6 +21,10 @@ comments:
     excludes: &excludedDirs
       - '**/test/**'
       - '**/androidTest/**'
+      - '**/commonTest/**'
+      - '**/jvmCommonTest/**'
+      - '**/jvmTest/**'
+      - '**/nativeTest/**'
       - '**/sample/**'
     searchInNestedClass: true
     searchInInnerClass: true
@@ -92,6 +103,9 @@ style:
   PreferToOverPairSyntax:
     active: true
   UnnecessaryAbstractClass:
+    active: true
+    excludes: *excludedDirs
+  MagicNumber:
     active: true
     excludes: *excludedDirs
 
