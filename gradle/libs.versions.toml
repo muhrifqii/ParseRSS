@@ -21,6 +21,7 @@ truth = "1.4.5"
 ktxml = "1.0.0"
 kxml2 = "2.3.0"
 dokka = "2.1.0"
+mockk = "1.14.6"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -41,6 +42,7 @@ runner = { module = "androidx.test:runner", version.ref = "runner" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 kxml = { module = "net.sf.kxml:kxml2", version.ref = "kxml2" }
 ktxml = { module = "org.kobjects.ktxml:core", version.ref = "ktxml" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }

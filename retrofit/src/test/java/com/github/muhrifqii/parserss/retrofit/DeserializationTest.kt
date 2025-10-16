@@ -1,15 +1,11 @@
 package com.github.muhrifqii.parserss.retrofit
 
-import com.github.muhrifqii.parserss.ParseRSS
 import com.github.muhrifqii.parserss.RSSFeedObject
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import org.xmlpull.v1.XmlPullParserFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,20 +20,11 @@ interface TestRSSService {
 @RunWith(value = RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
 class DeserializationTest {
-    @Before
-    fun configure() {
-        ParseRSS.init(XmlPullParserFactory.newInstance())
-    }
-
-    @After
-    fun release() {
-        ParseRSS.release()
-    }
 
     @Test
     fun yiiRss() {
         val retrofit = Retrofit.Builder()
-            .addConverterFactory(ParseRSSConverterFactory.create<RSSFeedObject>())
+            .addConverterFactory(ParseRSSConverterFactory.create())
             .baseUrl("http://dp3ap2.jogjaprov.go.id/")
             .build()
         val service = retrofit.create(TestRSSService::class.java)

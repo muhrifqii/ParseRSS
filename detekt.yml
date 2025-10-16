@@ -1,14 +1,6 @@
 build:
   maxIssues: 0
   excludeCorrectable: false
-  weights:
-  excludes:
-    - '**/test/**'
-    - '**/androidTest/**'
-    - '**/commonTest/**'
-    - '**/jvmCommonTest/**'
-    - '**/nativeTest/**'
-    - '**/sample/**'
 config:
   validation: true
   warningsAsErrors: false
@@ -19,13 +11,9 @@ comments:
   UndocumentedPublicClass:
     active: false
     excludes: &excludedDirs
-      - '**/test/**'
-      - '**/androidTest/**'
-      - '**/commonTest/**'
-      - '**/jvmCommonTest/**'
-      - '**/jvmTest/**'
-      - '**/nativeTest/**'
-      - '**/sample/**'
+      - '**/src/*test/**'
+      - '**/src/*Test/**'
+      - '**/src/sample/**'
     searchInNestedClass: true
     searchInInnerClass: true
     searchInInnerObject: true
