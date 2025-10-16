@@ -23,12 +23,20 @@ android {
     defaultConfig {
         minSdk = (project.property("minsdk_version") as String).toInt()
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 kotlin {
     applyDefaultHierarchyTemplate()
     jvm()
-    androidTarget()
+    androidTarget {
+        publishLibraryVariants("release")
+    }
     iosSimulatorArm64()
     targets.all {
         if (this is KotlinJvmTarget) {
@@ -93,6 +101,38 @@ kotlin {
             }
         }
         nativeTest {
+        }
+    }
+}
+
+publishing {
+    publications {
+        withType<MavenPublication> {
+            pom {
+                name.set("ParseRSS")
+                description.set("Simplest Kotlin Multiplatform RSS parser")
+                url.set("https://github.com/muhrifqii/ParseRSS")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://mit-license.org/")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("muhrifqii")
+                        name.set("Muhammad Rifqi Fatchurrahman")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:github.com/muhrifqii/ParseRSS.git")
+                    developerConnection.set("scm:git:ssh://github.com/muhrifqii/ParseRSS.git")
+                    url.set("https://github.com/muhrifqii/ParseRSS")
+                }
+            }
         }
     }
 }
