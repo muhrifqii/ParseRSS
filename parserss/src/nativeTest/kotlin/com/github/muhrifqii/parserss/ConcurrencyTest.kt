@@ -6,18 +6,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
-import java.util.stream.Stream
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@Suppress("NewApi")
 class ConcurrencyTest {
-
-    @Test
-    fun parallelParsing() = Stream.of(Feed.rssV2EnUS, Feed.rssV1Simple, Feed.rssV1Steam)
-        .parallel()
-        .map { parseRSS(it, false).getOrThrow() }
-        .forEach { assertion(it) }
 
     private fun assertion(it: RSSFeedObject) {
         when (it.title) {
@@ -45,13 +37,31 @@ class ConcurrencyTest {
     }
 
     @Test
-    fun concurrentCoroutine() = runBlocking(Dispatchers.Default) {
-        repeat(10) {
-            println("Step $it")
+    fun parallelParsing() {
+        runBlocking {
             coroutineScope {
                 listOf(Feed.rssV2EnUS, Feed.rssV1Simple, Feed.rssV1Steam)
-                    .map { async { parseRSS(it).getOrThrow() } }
-                    .awaitAll().forEach { assertion(it) }
+                    .map { feedXml ->
+                        async(Dispatchers.Default) {
+                            val result = parseRSS(feedXml).getOrThrow()
+                            assertion(result)
+                        }
+                    }
+                    .awaitAll()
+            }
+        }
+    }
+
+    @Test
+    fun stress() {
+        runBlocking(Dispatchers.Default) {
+            repeat(10) { i ->
+                println("Step $i")
+                coroutineScope {
+                    listOf(Feed.rssV2EnUS, Feed.rssV1Simple, Feed.rssV1Steam)
+                        .map { async { parseRSS(it).getOrThrow() } }
+                        .awaitAll().forEach { assertion(it) }
+                }
             }
         }
     }

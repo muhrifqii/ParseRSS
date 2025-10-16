@@ -1,39 +1,24 @@
 package com.github.muhrifqii.parserss
 
-import com.github.muhrifqii.parserss.element.toPrefixNamedElement
+import com.github.muhrifqii.parserss.element.RSSVersion
 import com.github.muhrifqii.parserss.samples.Feed
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class ParseTest {
-
-    private lateinit var feed: RSSFeedObject
+abstract class BaseParseV2FromStringTest : FromStringParser {
     private val xml = Feed.rssV2EnUS
 
-    @Test
-    fun rssNamePrefixedCheck() {
-        assertEquals("", "item".toPrefixNamedElement().prefix)
-        assertEquals("item", "item".toPrefixNamedElement().name)
-        assertEquals("xmlns", "xmlns:rdf".toPrefixNamedElement().prefix)
-        assertEquals("rdf", "xmlns:rdf".toPrefixNamedElement().name)
+    open fun `should correctly categorized as RSS v2`() {
+        val feed = parseFromString(xml).getOrThrow()
+        assertEquals(RSSVersion.RSS_V2, feed.version)
     }
 
-    @Test
-    fun validRSSFeedReader() {
-        val feed1 = parseRSS(xml).getOrThrow()
-        val feed2: RSSFeedObject = parseRSS(xml).getOrThrow()
-        assertTrue { feed1.title == "AAAA - RSS Channel - International Edition" }
-        assertTrue { feed2.title == "AAAA - RSS Channel - International Edition" }
-    }
-
-    @Test
-    fun validateRSSFeed() {
-        feed = parseRSS(xml).getOrThrow()
-        assertTrue { feed.title == "AAAA - RSS Channel - International Edition" }
-        assertTrue { feed.link == "https://dp3ap2.jogjaprov.go.id/" }
+    open fun `should correctly parse standard feed channel`() {
+        val feed = parseFromString(xml).getOrThrow()
+        assertEquals("AAAA - RSS Channel - International Edition", feed.title)
+        assertEquals("https://dp3ap2.jogjaprov.go.id/", feed.link)
         assertNull(feed.publishDate)
         assertNotNull(feed.image)
         assertEquals(
@@ -44,9 +29,8 @@ class ParseTest {
         assertEquals(2, feed.items.size)
     }
 
-    @Test
-    fun validateRSSItem() {
-        feed = parseRSS(xml).getOrThrow()
+    open fun `should correctly parse items`() {
+        val feed = parseFromString(xml).getOrThrow()
         val item1 = feed.items[0]
         assertEquals("Puncak Peringatan Hari Anak Nasional D.I. Yogyakarta 2018", item1.title)
         assertEquals(
@@ -68,9 +52,8 @@ class ParseTest {
         assertEquals(144, item2.media[10].height)
     }
 
-    @Test
-    fun `should able to parse description inside image tag`() {
-        feed = parseRSS(xml).getOrThrow()
+    open fun `should able to parse description inside image tag`() {
+        val feed = parseFromString(xml).getOrThrow()
         assertNotNull(feed.image)
         assertEquals("Breaking News, World News and Video", feed.image!!.description)
     }
